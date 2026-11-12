@@ -1,0 +1,2424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机场口语练习 - Luyện nói chủ đề Sân bay (có phát âm)</title>
+<style>
+  :root{
+    --blue:#1565c0;
+    --blue-dark:#0d47a1;
+    --blue-light:#e3f2fd;
+    --orange:#ef6c00;
+    --orange-light:#fff3e0;
+    --green:#2e7d32;
+    --green-light:#e8f5e9;
+    --amber:#f59e0b;
+    --amber-light:#fffbeb;
+    --gray:#f5f7fa;
+    --text:#1f2937;
+    --border:#dbe3ec;
+    --shadow:0 4px 20px rgba(21,101,192,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Segoe UI","Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    background:var(--gray);
+    color:var(--text);
+    line-height:1.65;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:linear-gradient(135deg,#0d47a1 0%,#1976d2 55%,#42a5f5 100%);
+    color:#fff;
+    padding:48px 20px 60px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before{
+    content:"✈";
+    position:absolute;
+    font-size:220px;
+    opacity:.08;
+    right:-30px;
+    top:-40px;
+    transform:rotate(-20deg);
+  }
+  header h1{
+    font-size:clamp(1.6rem,4vw,2.6rem);
+    font-weight:800;
+    letter-spacing:.5px;
+    position:relative;
+  }
+  header .cn{
+    display:block;
+    font-size:clamp(1rem,2.4vw,1.35rem);
+    font-weight:500;
+    opacity:.92;
+    margin-top:10px;
+    position:relative;
+  }
+  header p.sub{
+    margin-top:16px;
+    font-size:.98rem;
+    opacity:.85;
+    max-width:720px;
+    margin-left:auto;
+    margin-right:auto;
+    position:relative;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    max-width:1080px;
+    margin:-30px auto 0;
+    padding:0 20px;
+    position:relative;
+    z-index:5;
+  }
+  .nav-inner{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+  }
+  .nav-inner a{
+    text-decoration:none;
+    color:var(--blue-dark);
+    background:var(--blue-light);
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:.86rem;
+    font-weight:600;
+    transition:.2s;
+    white-space:nowrap;
+  }
+  .nav-inner a:hover{
+    background:var(--blue);
+    color:#fff;
+    transform:translateY(-2px);
+  }
+
+  /* ---------- SPEECH BAR ---------- */
+  .speech-bar{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    background:#fff;border-radius:14px;
+    padding:12px 16px;margin-top:14px;
+    box-shadow:var(--shadow);
+    font-size:.85rem;
+  }
+  .speech-bar > span:first-child{font-weight:700;color:var(--blue-dark)}
+  .rate-btn{
+    border:1px solid var(--border);background:#fff;
+    color:#4b5563;font-weight:700;font-size:.8rem;
+    padding:5px 12px;border-radius:999px;cursor:pointer;
+    font-family:inherit;transition:.2s;
+  }
+  .rate-btn:hover{border-color:var(--blue);color:var(--blue)}
+  .rate-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .stop-all{
+    margin-left:auto;
+    border:none;background:#fee2e2;color:#b91c1c;
+    font-weight:700;font-size:.8rem;
+    padding:6px 14px;border-radius:999px;cursor:pointer;
+    font-family:inherit;transition:.2s;
+  }
+  .stop-all:hover{background:#ef4444;color:#fff}
+  .voice-status{font-size:.78rem;color:#9ca3af;margin-left:6px}
+  .voice-status.ok{color:var(--green)}
+  .voice-status.warn{color:var(--orange)}
+
+  /* ---------- LAYOUT ---------- */
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding:44px 20px 80px;
+  }
+  section{margin-bottom:52px}
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:1.4rem;
+    font-weight:800;
+    color:var(--blue-dark);
+    margin-bottom:22px;
+  }
+  .section-title .bar{
+    width:6px;
+    height:28px;
+    background:linear-gradient(180deg,#1976d2,#42a5f5);
+    border-radius:4px;
+  }
+  .intro-note{
+    background:var(--orange-light);
+    border-left:4px solid var(--orange);
+    border-radius:0 10px 10px 0;
+    padding:12px 16px;
+    font-size:.9rem;
+    color:#7c4a03;
+    margin-bottom:26px;
+  }
+  .intro-note strong{color:#7c2d12}
+
+  /* ---------- SCENARIO CARD ---------- */
+  .scenario{
+    background:#fff;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    margin-bottom:22px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    transition:.25s;
+  }
+  .scenario:hover{box-shadow:0 8px 30px rgba(21,101,192,.16)}
+  .scenario-head{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:20px 22px;
+    cursor:pointer;
+    user-select:none;
+    background:linear-gradient(90deg,#f8fbff,#eef5fd);
+    border-left:6px solid var(--blue);
+  }
+  .scenario-head .num{
+    flex-shrink:0;
+    width:42px;height:42px;
+    border-radius:12px;
+    background:var(--blue);
+    color:#fff;
+    font-weight:800;
+    font-size:1.1rem;
+    display:grid;
+    place-items:center;
+  }
+  .scenario-head .title-block{flex:1}
+  .scenario-head h3{
+    font-size:1.1rem;
+    color:var(--blue-dark);
+    font-weight:800;
+  }
+  .scenario-head .sub{
+    font-size:.88rem;
+    color:#5b6b7f;
+    margin-top:2px;
+  }
+  .chevron{
+    font-size:1.2rem;
+    color:var(--blue);
+    transition:transform .3s;
+  }
+  .scenario.open .chevron{transform:rotate(180deg)}
+
+  .scenario-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .6s ease;
+  }
+  .scenario.open .scenario-body{max-height:9000px}
+  .scenario-body-inner{
+    padding:22px;
+    border-top:1px dashed var(--border);
+  }
+
+  .block{margin-bottom:24px}
+  .block:last-child{margin-bottom:0}
+  .block-label{
+    display:inline-block;
+    font-size:.74rem;
+    font-weight:800;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    padding:3px 10px;
+    border-radius:6px;
+    margin-bottom:10px;
+  }
+  .label-context{background:#e8eaf6;color:#3949ab}
+  .label-roles{background:var(--green-light);color:var(--green)}
+  .label-tasks{background:var(--orange-light);color:var(--orange)}
+  .label-dialogue{background:#e0f2fe;color:#0369a1}
+  .label-vocab{background:#fce4ec;color:#c2185b}
+
+  .block p{font-size:.95rem;color:#374151}
+  .block > ul{list-style:none;margin-top:6px}
+  .block > ul li{
+    font-size:.94rem;
+    padding:5px 0 5px 24px;
+    position:relative;
+    color:#374151;
+  }
+  .block > ul li::before{
+    content:"▸";
+    position:absolute;
+    left:4px;
+    color:var(--blue);
+    font-weight:800;
+  }
+
+  /* ---------- PLAY BUTTON ---------- */
+  .play-btn{
+    flex-shrink:0;
+    width:36px;height:36px;
+    border:none;border-radius:10px;
+    background:var(--blue-light);
+    color:var(--blue-dark);
+    cursor:pointer;
+    font-size:1rem;
+    display:grid;place-items:center;
+    transition:.15s;
+    margin-top:2px;
+  }
+  .play-btn:hover{background:var(--blue);color:#fff;transform:scale(1.05)}
+  .play-btn.speaking{background:var(--orange);color:#fff;animation:pulse .8s infinite}
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+  /* ---------- ANSWER SECTIONS (2 BƯỚC) ---------- */
+  .answer-part{
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:18px;
+  }
+  .part-free{
+    background:var(--amber-light);
+    border:2px dashed #fbbf24;
+  }
+  .part-guide{
+    background:#f0fdf4;
+    border:2px solid #86efac;
+  }
+  .part-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .part-badge{
+    font-size:.7rem;
+    font-weight:800;
+    padding:3px 10px;
+    border-radius:6px;
+    letter-spacing:.5px;
+  }
+  .badge-free{background:#fef3c7;color:#92400e}
+  .badge-guide{background:#d1fae5;color:#065f46}
+  .part-title{
+    font-weight:800;
+    font-size:1rem;
+    color:#1f2937;
+  }
+  .part-desc{
+    font-size:.85rem;
+    color:#6b7280;
+    margin-bottom:14px;
+    font-style:italic;
+  }
+
+  .dialogue-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .btn-play-all,.btn-stop{
+    border:none;cursor:pointer;font-weight:700;font-size:.85rem;
+    padding:9px 16px;border-radius:999px;transition:.2s;
+    font-family:inherit;
+  }
+  .btn-play-all{background:var(--blue);color:#fff}
+  .btn-play-all:hover{background:var(--blue-dark)}
+  .btn-play-all.speaking{background:var(--orange);animation:pulse 1s infinite}
+  .btn-stop{background:#eef2f7;color:#4b5563}
+  .btn-stop:hover{background:#dde4ec}
+
+  .practice-list{display:flex;flex-direction:column;gap:14px}
+  .practice-item{
+    background:#fff;
+    border:1px solid #fde68a;
+    border-radius:12px;
+    padding:14px;
+  }
+  .p-q{display:flex;gap:10px;align-items:flex-start}
+
+  .answer-input{
+    width:100%;
+    margin-top:10px;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:.9rem;
+    resize:vertical;
+    min-height:48px;
+    background:#fff;
+    transition:.2s;
+    color:#374151;
+  }
+  .answer-input:focus{
+    outline:none;
+    border-color:var(--amber);
+    box-shadow:0 0 0 3px rgba(245,158,11,.18);
+  }
+  .answer-input::placeholder{color:#9ca3af;font-style:italic}
+
+  .qa-pair{
+    background:#fff;
+    border:1px solid #bbf7d0;
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:12px;
+  }
+  .qa-pair:last-child{margin-bottom:0}
+  .qa-pair .p-q{margin-bottom:10px}
+  .p-a{
+    display:flex;gap:10px;align-items:flex-start;
+    padding:10px 12px;
+    background:var(--green-light);
+    border-radius:10px;
+    border-left:3px solid var(--green);
+  }
+  .p-a .play-btn{background:#fff;color:var(--green);margin-top:2px}
+  .p-a .play-btn:hover{background:var(--green);color:#fff}
+  .p-a .d-cn{color:#1b5e20}
+
+  /* ---------- DIALOGUE (FULL) ---------- */
+  .full-dialogue-toggle{
+    width:100%;
+    border:2px dashed #cbd5e1;
+    background:#f8fafc;
+    color:#475569;
+    font-weight:700;
+    font-size:.92rem;
+    padding:14px;
+    border-radius:12px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:.2s;
+  }
+  .full-dialogue-toggle:hover{
+    border-color:var(--blue);
+    color:var(--blue);
+    background:var(--blue-light);
+  }
+  .full-dialogue-wrap{margin-top:14px}
+  .full-dialogue-wrap.hidden{display:none}
+
+  .dialogue{
+    background:#fbfdff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:8px;
+  }
+  .d-line{
+    display:flex;gap:10px;align-items:flex-start;
+    padding:10px 8px;border-radius:10px;
+    transition:.15s;
+  }
+  .d-line:hover{background:#fff}
+  .d-line + .d-line{border-top:1px dashed #e5edf5}
+  .d-body{flex:1;min-width:0}
+  .d-cn{font-size:1rem;font-weight:700;color:#1f2937;line-height:1.5}
+  .speaker{
+    display:inline-block;
+    font-size:.7rem;font-weight:800;
+    padding:1px 8px;border-radius:6px;
+    margin-right:6px;
+    vertical-align:middle;
+    letter-spacing:.3px;
+  }
+  .sp-A{background:#e3f2fd;color:#1565c0}
+  .sp-B{background:#e8f5e9;color:#2e7d32}
+  .sp-staff{background:#fff3e0;color:#e65100}
+  .sp-broadcast{background:#fce4ec;color:#c2185b}
+  .pinyin{font-size:.82rem;color:#9ca3af;font-style:italic;margin-top:1px}
+  .vn{font-size:.85rem;color:#6b7280;margin-top:1px}
+
+  /* ---------- VOCAB TABLE ---------- */
+  .table-wrap{
+    background:#fff;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  table{width:100%;border-collapse:collapse}
+  thead{background:linear-gradient(90deg,#0d47a1,#1976d2)}
+  thead th{
+    color:#fff;
+    text-align:left;
+    padding:14px 18px;
+    font-size:.88rem;
+    letter-spacing:.3px;
+  }
+  tbody td{
+    padding:12px 18px;
+    border-bottom:1px solid #eef2f7;
+    font-size:.94rem;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:#fafcff}
+  tbody tr:hover{background:var(--blue-light)}
+  .cn-word{font-weight:700;color:var(--blue-dark)}
+  .pinyin{color:#6b7280;font-size:.85rem;font-style:italic}
+  .scene-badges{display:flex;gap:5px;flex-wrap:wrap}
+  .scene-badges b{
+    display:inline-grid;
+    place-items:center;
+    width:26px;height:26px;
+    border-radius:7px;
+    background:var(--blue-light);
+    color:var(--blue-dark);
+    font-size:.8rem;
+  }
+
+  /* ---------- TIPS ---------- */
+  .tips-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:16px;
+  }
+  .tip{
+    background:#fff;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:var(--shadow);
+    border-top:4px solid var(--orange);
+    transition:.2s;
+  }
+  .tip:hover{transform:translateY(-4px)}
+  .tip .tip-num{
+    width:34px;height:34px;
+    border-radius:10px;
+    background:var(--orange-light);
+    color:var(--orange);
+    display:grid;place-items:center;
+    font-weight:800;
+    margin-bottom:12px;
+  }
+  .tip h4{color:var(--blue-dark);font-size:1rem;margin-bottom:6px}
+  .tip p{font-size:.9rem;color:#4b5563}
+
+  footer{
+    text-align:center;
+    padding:30px 20px 50px;
+    color:#7b8794;
+    font-size:.85rem;
+  }
+  footer strong{color:var(--blue-dark)}
+
+  @media(max-width:600px){
+    .scenario-head{padding:16px}
+    .scenario-head .num{width:36px;height:36px;font-size:.95rem}
+    .scenario-head h3{font-size:1rem}
+    .scenario-body-inner{padding:16px}
+    thead th,tbody td{padding:10px 12px;font-size:.85rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✈️ 机场口语练习</h1>
+  <span class="cn">Luyện nói tiếng Trung – Chủ đề Sân bay &amp; Hàng không</span>
+  <p class="sub">6 tình huống · Mỗi tình huống 2 bước: Tự trả lời → Xem hướng dẫn trả lời · Có phát âm tiếng Trung</p>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#scenarios">🎬 Tình huống</a>
+    <a href="#vocab">📚 Từ vựng</a>
+    <a href="#tips">💡 Tổ chức lớp</a>
+  </div>
+
+  <div class="speech-bar">
+    <span>🔈 Tốc độ đọc:</span>
+    <button class="rate-btn active" data-rate="1">1x</button>
+    <button class="rate-btn" data-rate="0.7">0.7x</button>
+    <button class="rate-btn" data-rate="1.3">1.3x</button>
+    <button class="stop-all" title="Dừng tất cả âm thanh">⏹ Dừng tất cả</button>
+    <span class="voice-status" id="voiceStatus">Đang tải giọng đọc…</span>
+  </div>
+</nav>
+
+<main>
+
+  <div class="intro-note">
+    💡 <strong>Cách học mỗi tình huống:</strong> Đọc <em>Bối cảnh</em> để hiểu tình huống → <strong>Bước 1 – Tự trả lời:</strong> nghe câu hỏi, nói to câu trả lời của bạn (có thể ghi chú) → <strong>Bước 2 – Hướng dẫn trả lời:</strong> so sánh với đáp án mẫu để biết mình đã trả lời ổn chưa → Cuối cùng mở <em>Hội thoại mẫu đầy đủ</em> nếu muốn xem toàn cảnh. Ghi chú được lưu tự động trên trình duyệt.
+  </div>
+
+  <!-- ================= SCENARIOS ================= -->
+  <section id="scenarios">
+    <div class="section-title"><span class="bar"></span>🎬 6 Tình huống luyện nói</div>
+
+    <!-- ========== 1 ========== -->
+    <article class="scenario open">
+      <div class="scenario-head">
+        <div class="num">1</div>
+        <div class="title-block">
+          <h3>“Ngày mai bay rồi!” – Chuẩn bị trước chuyến đi</h3>
+          <div class="sub">Hai bạn nói chuyện qua điện thoại tối hôm trước</div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-body-inner">
+
+          <div class="block">
+            <span class="block-label label-context">Bối cảnh</span>
+            <p>Hai bạn học sinh chuẩn bị đi du lịch Trung Quốc. Một người đã có kinh nghiệm, một người lần đầu đi máy bay. Họ nói chuyện qua điện thoại tối hôm trước.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-roles">Nhân vật</span>
+            <ul>
+              <li><strong>A (có kinh nghiệm):</strong> Hỏi thăm tình hình chuẩn bị của B.</li>
+              <li><strong>B (lần đầu đi):</strong> Lo lắng, chưa biết cần chuẩn bị gì.</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-tasks">Yêu cầu luyện nói</span>
+            <ul>
+              <li>Hỏi đáp về <strong>护照</strong>, <strong>签证</strong>, <strong>机票</strong>, <strong>回程机票</strong>.</li>
+              <li>Nhắc nhở <strong>收拾行李</strong> và kiểm tra <strong>护照</strong> còn hạn.</li>
+              <li>Gợi ý <strong>订机票</strong> và lưu ý <strong>退机票</strong> nếu đổi kế hoạch.</li>
+            </ul>
+          </div>
+
+          <!-- BƯỚC 1 -->
+          <div class="block">
+            <div class="answer-part part-free">
+              <div class="part-header">
+                <span class="part-badge badge-free">BƯỚC 1</span>
+                <span class="part-title">🗣 Tự trả lời theo ý mình</span>
+              </div>
+              <p class="part-desc">Bạn đóng vai <strong>B</strong>. Nghe câu hỏi của A rồi trả lời to lên. Chưa xem đáp án bên dưới!</p>
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="free1">▶ Nghe tất cả câu hỏi</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="practice-list" id="free1">
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="喂，你明天的飞机是几点的？">🔊</button>
+                    <div>
+                      <div class="d-cn">喂，你明天的飞机是几点的？</div>
+                      <div class="pinyin">wèi, nǐ míngtiān de fēijī shì jǐ diǎn de?</div>
+                      <div class="vn">Alo, máy bay ngày mai của bạn mấy giờ?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s1-q1" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="你的护照和签证都办好了吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">你的护照和签证都办好了吗？</div>
+                      <div class="pinyin">nǐ de hùzhào hé qiānzhèng dōu bànhǎo le ma?</div>
+                      <div class="vn">Hộ chiếu và visa bạn làm xong chưa?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s1-q2" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="回程机票买了吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">回程机票买了吗？</div>
+                      <div class="pinyin">huíchéng jīpiào mǎi le ma?</div>
+                      <div class="vn">Vé về mua chưa?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s1-q3" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="行李收拾好了吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">行李收拾好了吗？</div>
+                      <div class="pinyin">xínglǐ shōushi hǎo le ma?</div>
+                      <div class="vn">Dọn hành lý chưa?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s1-q4" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="answer-part part-guide">
+              <div class="part-header">
+                <span class="part-badge badge-guide">BƯỚC 2</span>
+                <span class="part-title">📖 Hướng dẫn trả lời</span>
+              </div>
+              <p class="part-desc">So sánh câu trả lời của bạn với gợi ý bên dưới. Không cần giống hệt — chỉ cần đúng ý và đúng ngữ pháp là được.</p>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="喂，你明天的飞机是几点的？">🔊</button>
+                  <div>
+                    <div class="d-cn">喂，你明天的飞机是几点的？</div>
+                    <div class="pinyin">wèi, nǐ míngtiān de fēijī shì jǐ diǎn de?</div>
+                    <div class="vn">Alo, máy bay ngày mai của bạn mấy giờ?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="早上九点的。因为我家离机场比较远，所以我六点就得起床出发。">🔊</button>
+                  <div>
+                    <div class="d-cn">早上九点的。因为我家离机场比较远，所以我六点就得起床出发。</div>
+                    <div class="pinyin">zǎoshang jiǔ diǎn de. yīnwèi wǒ jiā lí jīchǎng bǐjiào yuǎn, suǒyǐ wǒ liù diǎn jiù děi qǐchuáng chūfā.</div>
+                    <div class="vn">9 giờ sáng. Vì nhà tôi cách sân bay khá xa, nên 6 giờ tôi phải dậy xuất phát.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="你的护照和签证都办好了吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">你的护照和签证都办好了吗？</div>
+                    <div class="pinyin">nǐ de hùzhào hé qiānzhèng dōu bànhǎo le ma?</div>
+                    <div class="vn">Hộ chiếu và visa bạn làm xong chưa?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="办好了。我的签证是多次往返的，明年还可以再去。">🔊</button>
+                  <div>
+                    <div class="d-cn">办好了。我的签证是多次往返的，明年还可以再去。</div>
+                    <div class="pinyin">bànhǎo le. wǒ de qiānzhèng shì duōcì wǎngfǎn de, míngnián hái kěyǐ zài qù.</div>
+                    <div class="vn">Xong rồi. Visa tôi loại nhiều lần, năm sau còn đi được.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="回程机票买了吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">回程机票买了吗？</div>
+                    <div class="pinyin">huíchéng jīpiào mǎi le ma?</div>
+                    <div class="vn">Vé về mua chưa?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="买好了，我已经保存在手机里了。">🔊</button>
+                  <div>
+                    <div class="d-cn">买好了，我已经保存在手机里了。</div>
+                    <div class="pinyin">mǎi hǎo le, wǒ yǐjīng bǎocún zài shǒujī lǐ le.</div>
+                    <div class="vn">Mua rồi, tôi lưu trong điện thoại rồi.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="行李收拾好了吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">行李收拾好了吗？</div>
+                    <div class="pinyin">xínglǐ shōushi hǎo le ma?</div>
+                    <div class="vn">Dọn hành lý chưa?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="差不多了，装满了整整一个大箱子。">🔊</button>
+                  <div>
+                    <div class="d-cn">差不多了，装满了整整一个大箱子。</div>
+                    <div class="pinyin">chàbuduō le, zhuāngmǎn le zhěngzhěng yí ge dà xiāngzi.</div>
+                    <div class="vn">Gần xong rồi, đầy cả một vali to.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL DIALOGUE (collapsible) -->
+          <div class="block">
+            <button class="full-dialogue-toggle" data-target="dlg1-full">🎬 Xem toàn bộ hội thoại mẫu (mở rộng)</button>
+            <div class="full-dialogue-wrap hidden" id="dlg1-full">
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="dlg1">▶ Phát toàn bộ hội thoại</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="dialogue" id="dlg1">
+                <div class="d-line">
+                  <button class="play-btn" data-text="喂，你明天的飞机是几点的？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>喂，你明天的飞机是几点的？</div>
+                    <div class="pinyin">wèi, nǐ míngtiān de fēijī shì jǐ diǎn de?</div>
+                    <div class="vn">Alo, máy bay ngày mai của bạn mấy giờ?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="早上九点的。因为我家离机场比较远，所以我六点就得起床出发。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>早上九点的。因为我家离机场比较远，所以我六点就得起床出发。</div>
+                    <div class="pinyin">zǎoshang jiǔ diǎn de. yīnwèi wǒ jiā lí jīchǎng bǐjiào yuǎn, suǒyǐ wǒ liù diǎn jiù děi qǐchuáng chūfā.</div>
+                    <div class="vn">9 giờ sáng. Vì nhà tôi cách sân bay khá xa, nên 6 giờ tôi phải dậy xuất phát.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="你的护照和签证都办好了吗？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>你的护照和签证都办好了吗？</div>
+                    <div class="pinyin">nǐ de hùzhào hé qiānzhèng dōu bànhǎo le ma?</div>
+                    <div class="vn">Hộ chiếu và visa bạn làm xong chưa?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="办好了。我的签证是多次往返的，明年还可以再去。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>办好了。我的签证是多次往返的，明年还可以再去。</div>
+                    <div class="pinyin">bànhǎo le. wǒ de qiānzhèng shì duōcì wǎngfǎn de, míngnián hái kěyǐ zài qù.</div>
+                    <div class="vn">Xong rồi. Visa tôi loại nhiều lần, năm sau còn đi được.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="回程机票买了吗？入境的时候海关可能会看。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>回程机票买了吗？入境的时候海关可能会看。</div>
+                    <div class="pinyin">huíchéng jīpiào mǎi le ma? rùjìng de shíhou hǎiguān kěnéng huì kàn.</div>
+                    <div class="vn">Vé về mua chưa? Lúc nhập cảnh hải quan có thể xem.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="买好了，我已经保存在手机里了。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>买好了，我已经保存在手机里了。</div>
+                    <div class="pinyin">mǎi hǎo le, wǒ yǐjīng bǎocún zài shǒujī lǐ le.</div>
+                    <div class="vn">Mua rồi, tôi lưu trong điện thoại rồi.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="行李收拾好了吗？别超重了。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>行李收拾好了吗？别超重了。</div>
+                    <div class="pinyin">xínglǐ shōushi hǎo le ma? bié chāozhòng le.</div>
+                    <div class="vn">Dọn hành lý chưa? Đừng quá cân.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="差不多了，我的行李特别多，装满了整整一个大箱子。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>差不多了，我的行李特别多，装满了整整一个大箱子。</div>
+                    <div class="pinyin">chàbuduō le, wǒ de xínglǐ tèbié duō, zhuāngmǎn le zhěngzhěng yí ge dà xiāngzi.</div>
+                    <div class="vn">Gần xong rồi, hành lý tôi nhiều lắm, đầy cả một vali to.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="如果有液体化妆品，记得办理托运。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>如果有液体化妆品，记得办理托运。</div>
+                    <div class="pinyin">rúguǒ yǒu yètǐ huàzhuāngpǐn, jìde bànlǐ tuōyùn.</div>
+                    <div class="vn">Nếu có mỹ phẩm lỏng, nhớ ký gửi.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好的，谢谢你提醒！">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>好的，谢谢你提醒！</div>
+                    <div class="pinyin">hǎo de, xièxie nǐ tíxǐng!</div>
+                    <div class="vn">Được, cảm ơn bạn nhắc!</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-vocab">Từ vựng cần dùng</span>
+            <div class="vocab-tags"><span>护照</span><span>签证</span><span>机票</span><span>回程机票</span><span>行李</span></div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ========== 2 ========== -->
+    <article class="scenario">
+      <div class="scenario-head">
+        <div class="num">2</div>
+        <div class="title-block">
+          <h3>“Tại quầy check-in” – Làm thủ tục tại sân bay</h3>
+          <div class="sub">Hành khách và nhân viên hàng không tại quầy 值机</div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-body-inner">
+
+          <div class="block">
+            <span class="block-label label-context">Bối cảnh</span>
+            <p>Một hành khách đến quầy <strong>值机</strong> (check-in) của hãng hàng không. Nhân viên làm thủ tục cho khách.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-roles">Nhân vật</span>
+            <ul>
+              <li><strong>Nhân viên hàng không:</strong> Hỏi giấy tờ, cân hành lý, phát thẻ lên máy bay.</li>
+              <li><strong>Hành khách:</strong> Xuất trình <strong>护照</strong>, <strong>机票</strong>, gửi <strong>行李</strong> <strong>托运</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-tasks">Yêu cầu luyện nói</span>
+            <ul>
+              <li>Yêu cầu xuất trình <strong>护照</strong> và <strong>机票</strong>.</li>
+              <li>Hỏi về <strong>行李</strong> có <strong>托运</strong> không, có <strong>超重</strong> không.</li>
+              <li>Thông báo <strong>登机口</strong> và giờ <strong>登机</strong>.</li>
+              <li>Đưa <strong>登机牌</strong> cho khách.</li>
+            </ul>
+          </div>
+
+          <!-- BƯỚC 1 -->
+          <div class="block">
+            <div class="answer-part part-free">
+              <div class="part-header">
+                <span class="part-badge badge-free">BƯỚC 1</span>
+                <span class="part-title">🗣 Tự trả lời theo ý mình</span>
+              </div>
+              <p class="part-desc">Bạn đóng vai <strong>hành khách</strong>. Nghe nhân viên hỏi rồi trả lời to lên. Chưa xem đáp án bên dưới!</p>
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="free2">▶ Nghe tất cả câu hỏi</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="practice-list" id="free2">
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="您好，请出示您的护照和机票。">🔊</button>
+                    <div>
+                      <div class="d-cn">您好，请出示您的护照和机票。</div>
+                      <div class="pinyin">nín hǎo, qǐng chūshì nín de hùzhào hé jīpiào.</div>
+                      <div class="vn">Xin chào, vui lòng xuất trình hộ chiếu và vé.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s2-q1" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="您的行李需要托运吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">您的行李需要托运吗？</div>
+                      <div class="pinyin">nín de xínglǐ xūyào tuōyùn ma?</div>
+                      <div class="vn">Hành lý của bạn cần ký gửi không?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s2-q2" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="您的行李超重了两公斤，需要额外付费。">🔊</button>
+                    <div>
+                      <div class="d-cn">您的行李超重了两公斤，需要额外付费。</div>
+                      <div class="pinyin">nín de xínglǐ chāozhòng le liǎng gōngjīn, xūyào èwài fùfèi.</div>
+                      <div class="vn">Hành lý của bạn quá cân 2 kg, cần trả thêm phí.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s2-q3" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="登机口是23号，这是您的登机牌。">🔊</button>
+                    <div>
+                      <div class="d-cn">登机口是23号，这是您的登机牌。</div>
+                      <div class="pinyin">dēngjīkǒu shì èrshísān hào, zhè shì nín de dēngjīpái.</div>
+                      <div class="vn">Cửa lên máy bay số 23, đây là thẻ lên máy bay của bạn.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s2-q4" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="answer-part part-guide">
+              <div class="part-header">
+                <span class="part-badge badge-guide">BƯỚC 2</span>
+                <span class="part-title">📖 Hướng dẫn trả lời</span>
+              </div>
+              <p class="part-desc">So sánh câu trả lời của bạn với gợi ý bên dưới. Không cần giống hệt — chỉ cần đúng ý và đúng ngữ pháp là được.</p>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="您好，请出示您的护照和机票。">🔊</button>
+                  <div>
+                    <div class="d-cn">您好，请出示您的护照和机票。</div>
+                    <div class="pinyin">nín hǎo, qǐng chūshì nín de hùzhào hé jīpiào.</div>
+                    <div class="vn">Xin chào, vui lòng xuất trình hộ chiếu và vé.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="好的，这是我的护照和机票。">🔊</button>
+                  <div>
+                    <div class="d-cn">好的，这是我的护照和机票。</div>
+                    <div class="pinyin">hǎo de, zhè shì wǒ de hùzhào hé jīpiào.</div>
+                    <div class="vn">Vâng, đây là hộ chiếu và vé của tôi.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="您的行李需要托运吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">您的行李需要托运吗？</div>
+                    <div class="pinyin">nín de xínglǐ xūyào tuōyùn ma?</div>
+                    <div class="vn">Hành lý của bạn cần ký gửi không?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="需要，这个箱子托运，这个包我随身带。">🔊</button>
+                  <div>
+                    <div class="d-cn">需要，这个箱子托运，这个包我随身带。</div>
+                    <div class="pinyin">xūyào, zhège xiāngzi tuōyùn, zhège bāo wǒ suíshēn dài.</div>
+                    <div class="vn">Cần, vali này ký gửi, túi này tôi xách tay.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="您的行李超重了两公斤，需要额外付费。">🔊</button>
+                  <div>
+                    <div class="d-cn">您的行李超重了两公斤，需要额外付费。</div>
+                    <div class="pinyin">nín de xínglǐ chāozhòng le liǎng gōngjīn, xūyào èwài fùfèi.</div>
+                    <div class="vn">Hành lý của bạn quá cân 2 kg, cần trả thêm phí.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="好的，没问题。请问登机口是几号？">🔊</button>
+                  <div>
+                    <div class="d-cn">好的，没问题。请问登机口是几号？</div>
+                    <div class="pinyin">hǎo de, méi wèntí. qǐngwèn dēngjīkǒu shì jǐ hào?</div>
+                    <div class="vn">Được, không vấn đề. Cho hỏi cửa lên máy bay số mấy?</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="登机口是23号，这是您的登机牌。">🔊</button>
+                  <div>
+                    <div class="d-cn">登机口是23号，这是您的登机牌。</div>
+                    <div class="pinyin">dēngjīkǒu shì èrshísān hào, zhè shì nín de dēngjīpái.</div>
+                    <div class="vn">Cửa lên máy bay số 23, đây là thẻ lên máy bay của bạn.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="谢谢！请问安检在哪里？">🔊</button>
+                  <div>
+                    <div class="d-cn">谢谢！请问安检在哪里？</div>
+                    <div class="pinyin">xièxie! qǐngwèn ānjiǎn zài nǎlǐ?</div>
+                    <div class="vn">Cảm ơn! Cho hỏi kiểm tra an ninh ở đâu?</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL DIALOGUE -->
+          <div class="block">
+            <button class="full-dialogue-toggle" data-target="dlg2-full">🎬 Xem toàn bộ hội thoại mẫu (mở rộng)</button>
+            <div class="full-dialogue-wrap hidden" id="dlg2-full">
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="dlg2">▶ Phát toàn bộ hội thoại</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="dialogue" id="dlg2">
+                <div class="d-line">
+                  <button class="play-btn" data-text="您好，请出示您的护照和机票。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>您好，请出示您的护照和机票。</div>
+                    <div class="pinyin">nín hǎo, qǐng chūshì nín de hùzhào hé jīpiào.</div>
+                    <div class="vn">Xin chào, vui lòng xuất trình hộ chiếu và vé.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好的，这是我的护照和机票。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">乘客</span>好的，这是我的护照和机票。</div>
+                    <div class="pinyin">hǎo de, zhè shì wǒ de hùzhào hé jīpiào.</div>
+                    <div class="vn">Vâng, đây là hộ chiếu và vé của tôi.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="您的行李需要托运吗？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>您的行李需要托运吗？</div>
+                    <div class="pinyin">nín de xínglǐ xūyào tuōyùn ma?</div>
+                    <div class="vn">Hành lý của bạn cần ký gửi không?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="需要，这个箱子托运，这个包我随身带。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">乘客</span>需要，这个箱子托运，这个包我随身带。</div>
+                    <div class="pinyin">xūyào, zhège xiāngzi tuōyùn, zhège bāo wǒ suíshēn dài.</div>
+                    <div class="vn">Cần, vali này ký gửi, túi này tôi xách tay.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="请把箱子放上来称一下。您的行李超重了两公斤，需要额外付费。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>请把箱子放上来称一下。……您的行李超重了两公斤，需要额外付费。</div>
+                    <div class="pinyin">qǐng bǎ xiāngzi fàng shànglái chēng yíxià. …… nín de xínglǐ chāozhòng le liǎng gōngjīn, xūyào èwài fùfèi.</div>
+                    <div class="vn">Vui lòng đặt vali lên cân. … Hành lý của bạn quá cân 2 kg, cần trả thêm phí.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好的，没问题。请问登机口是几号？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">乘客</span>好的，没问题。请问登机口是几号？</div>
+                    <div class="pinyin">hǎo de, méi wèntí. qǐngwèn dēngjīkǒu shì jǐ hào?</div>
+                    <div class="vn">Được, không vấn đề. Cho hỏi cửa lên máy bay số mấy?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="登机口是23号，这是您的登机牌，请拿好。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>登机口是23号，这是您的登机牌，请拿好。</div>
+                    <div class="pinyin">dēngjīkǒu shì èrshísān hào, zhè shì nín de dēngjīpái, qǐng ná hǎo.</div>
+                    <div class="vn">Cửa số 23, đây là thẻ lên máy bay, cầm cho chắc.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="谢谢！请问安检在哪里？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">乘客</span>谢谢！请问安检在哪里？</div>
+                    <div class="pinyin">xièxie! qǐngwèn ānjiǎn zài nǎlǐ?</div>
+                    <div class="vn">Cảm ơn! Cho hỏi kiểm tra an ninh ở đâu?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="一直往前走，左转就到了。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>一直往前走，左转就到了。</div>
+                    <div class="pinyin">yìzhí wǎng qián zǒu, zuǒ zhuǎn jiù dào le.</div>
+                    <div class="vn">Đi thẳng, rẽ trái là tới.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-vocab">Từ vựng cần dùng</span>
+            <div class="vocab-tags"><span>值机</span><span>护照</span><span>机票</span><span>行李</span><span>托运</span><span>登机牌</span><span>登机口</span></div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ========== 3 ========== -->
+    <article class="scenario">
+      <div class="scenario-head">
+        <div class="num">3</div>
+        <div class="title-block">
+          <h3>“Thông báo khẩn tại sân bay” – Xử lý tình huống phát sinh</h3>
+          <div class="sub">Loa phát thanh báo 航班 晚点 / 取消</div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-body-inner">
+
+          <div class="block">
+            <span class="block-label label-context">Bối cảnh</span>
+            <p>Tại <strong>机场</strong>, loa phát thanh thông báo <strong>航班</strong> bị <strong>晚点</strong> (muộn) hoặc <strong>取消</strong> (hủy). Hai hành khách bàn bạc xem nên làm gì.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-roles">Nhân vật</span>
+            <ul>
+              <li><strong>Hành khách A:</strong> Bình tĩnh, đề xuất giải pháp.</li>
+              <li><strong>Hành khách B:</strong> Lo lắng, sợ lỡ việc.</li>
+              <li><strong>Nhân viên sân bay:</strong> Giải đáp thắc mắc.</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-tasks">Yêu cầu luyện nói</span>
+            <ul>
+              <li>Thông báo <strong>航班</strong> bị <strong>晚点</strong> / <strong>取消</strong>.</li>
+              <li>Hỏi nhau về <strong>登机口</strong> có thay đổi không.</li>
+              <li>Bàn về việc <strong>退机票</strong> hoặc đổi <strong>航班</strong> khác.</li>
+              <li>Tìm <strong>登机口</strong> mới, kiểm tra <strong>登机牌</strong>.</li>
+            </ul>
+          </div>
+
+          <!-- BƯỚC 1 -->
+          <div class="block">
+            <div class="answer-part part-free">
+              <div class="part-header">
+                <span class="part-badge badge-free">BƯỚC 1</span>
+                <span class="part-title">🗣 Tự trả lời theo ý mình</span>
+              </div>
+              <p class="part-desc">Bạn đóng vai <strong>hành khách B</strong> (đang lo lắng). Nghe câu hỏi rồi trả lời to lên. Chưa xem đáp án bên dưới!</p>
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="free3">▶ Nghe tất cả câu hỏi</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="practice-list" id="free3">
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="我们的航班晚点两个小时了，怎么办？">🔊</button>
+                    <div>
+                      <div class="d-cn">我们的航班晚点两个小时了，怎么办？</div>
+                      <div class="pinyin">wǒmen de hángbān wǎndiǎn liǎng ge xiǎoshí le, zěnme bàn?</div>
+                      <div class="vn">Chuyến bay của chúng ta muộn 2 tiếng rồi, làm sao?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s3-q1" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="如果航班取消了怎么办？">🔊</button>
+                    <div>
+                      <div class="d-cn">如果航班取消了怎么办？</div>
+                      <div class="pinyin">rúguǒ hángbān qǔxiāo le zěnme bàn?</div>
+                      <div class="vn">Nếu chuyến bay bị hủy thì sao?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s3-q2" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="请问CA1234航班还飞吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">请问CA1234航班还飞吗？</div>
+                      <div class="pinyin">qǐngwèn CA1234 hángbān hái fēi ma?</div>
+                      <div class="vn">Cho hỏi chuyến CA1234 còn bay không?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s3-q3" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="answer-part part-guide">
+              <div class="part-header">
+                <span class="part-badge badge-guide">BƯỚC 2</span>
+                <span class="part-title">📖 Hướng dẫn trả lời</span>
+              </div>
+              <p class="part-desc">So sánh câu trả lời của bạn với gợi ý bên dưới. Không cần giống hệt — chỉ cần đúng ý và đúng ngữ pháp là được.</p>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="我们的航班晚点两个小时了，怎么办？">🔊</button>
+                  <div>
+                    <div class="d-cn">我们的航班晚点两个小时了，怎么办？</div>
+                    <div class="pinyin">wǒmen de hángbān wǎndiǎn liǎng ge xiǎoshí le, zěnme bàn?</div>
+                    <div class="vn">Chuyến bay của chúng ta muộn 2 tiếng rồi, làm sao?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="别着急，我们先去新的登机口看看。">🔊</button>
+                  <div>
+                    <div class="d-cn">别着急，我们先去新的登机口看看。</div>
+                    <div class="pinyin">bié zháojí, wǒmen xiān qù xīn de dēngjīkǒu kànkan.</div>
+                    <div class="vn">Đừng lo, chúng ta đến cửa mới xem sao.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="如果航班取消了怎么办？">🔊</button>
+                  <div>
+                    <div class="d-cn">如果航班取消了怎么办？</div>
+                    <div class="pinyin">rúguǒ hángbān qǔxiāo le zěnme bàn?</div>
+                    <div class="vn">Nếu chuyến bay bị hủy thì sao?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="如果取消了，我们得去退机票或者改签。">🔊</button>
+                  <div>
+                    <div class="d-cn">如果取消了，我们得去退机票或者改签。</div>
+                    <div class="pinyin">rúguǒ qǔxiāo le, wǒmen děi qù tuì jīpiào huòzhě gǎiqiān.</div>
+                    <div class="vn">Nếu hủy, chúng ta phải hủy vé hoặc đổi chuyến.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="请问CA1234航班还飞吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">请问CA1234航班还飞吗？</div>
+                    <div class="pinyin">qǐngwèn CA1234 hángbān hái fēi ma?</div>
+                    <div class="vn">Cho hỏi chuyến CA1234 còn bay không?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="目前只是晚点，请留意广播通知。">🔊</button>
+                  <div>
+                    <div class="d-cn">目前只是晚点，请留意广播通知。</div>
+                    <div class="pinyin">mùqián zhǐshì wǎndiǎn, qǐng liúyì guǎngbō tōngzhī.</div>
+                    <div class="vn">Hiện chỉ muộn thôi, chú ý thông báo loa.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL DIALOGUE -->
+          <div class="block">
+            <button class="full-dialogue-toggle" data-target="dlg3-full">🎬 Xem toàn bộ hội thoại mẫu (mở rộng)</button>
+            <div class="full-dialogue-wrap hidden" id="dlg3-full">
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="dlg3">▶ Phát toàn bộ hội thoại</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="dialogue" id="dlg3">
+                <div class="d-line">
+                  <button class="play-btn" data-text="各位旅客请注意，飞往北京的CA1234航班由于天气原因晚点两个小时，登机口从A区改到B区。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-broadcast">广播</span>各位旅客请注意，飞往北京的CA1234航班由于天气原因晚点两个小时，登机口从A区改到B区。</div>
+                    <div class="pinyin">gèwèi lǚkè qǐng zhùyì, fēi wǎng Běijīng de CA1234 hángbān yóuyú tiānqì yuányīn wǎndiǎn liǎng ge xiǎoshí, dēngjīkǒu cóng A qū gǎi dào B qū.</div>
+                    <div class="vn">Xin chú ý, chuyến bay CA1234 đi Bắc Kinh do thời tiết bị muộn 2 tiếng, cửa lên máy bay đổi từ khu A sang khu B.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="你听到了吗？我们的航班晚点两个小时了！">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>你听到了吗？我们的航班晚点两个小时了！</div>
+                    <div class="pinyin">nǐ tīngdào le ma? wǒmen de hángbān wǎndiǎn liǎng ge xiǎoshí le!</div>
+                    <div class="vn">Bạn nghe thấy không? Chuyến bay của chúng ta muộn 2 tiếng rồi!</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="啊？那怎么办？我们会不会赶不上转机？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>啊？那怎么办？我们会不会赶不上转机？</div>
+                    <div class="pinyin">a? nà zěnme bàn? wǒmen huì bú huì gǎnbushàng zhuǎnjī?</div>
+                    <div class="vn">Hả? Vậy làm sao? Chúng ta có bị lỡ chuyến nối không?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="别着急，我们先去新的登机口看看。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>别着急，我们先去新的登机口看看。</div>
+                    <div class="pinyin">bié zháojí, wǒmen xiān qù xīn de dēngjīkǒu kànkan.</div>
+                    <div class="vn">Đừng lo, chúng ta đến cửa mới xem sao.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="如果航班取消了怎么办？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>如果航班取消了怎么办？</div>
+                    <div class="pinyin">rúguǒ hángbān qǔxiāo le zěnme bàn?</div>
+                    <div class="vn">Nếu chuyến bay bị hủy thì sao?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="如果取消了，我们得去退机票或者改签。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>如果取消了，我们得去退机票或者改签。</div>
+                    <div class="pinyin">rúguǒ qǔxiāo le, wǒmen děi qù tuì jīpiào huòzhě gǎiqiān.</div>
+                    <div class="vn">Nếu hủy, chúng ta phải hủy vé hoặc đổi chuyến.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好吧，我先去问问工作人员。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>好吧，我先去问问工作人员。</div>
+                    <div class="pinyin">hǎo ba, wǒ xiān qù wènwen gōngzuò rényuán.</div>
+                    <div class="vn">Được, tôi đi hỏi nhân viên trước.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="您好，有什么可以帮您？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>您好，有什么可以帮您？</div>
+                    <div class="pinyin">nín hǎo, yǒu shénme kěyǐ bāng nín?</div>
+                    <div class="vn">Xin chào, tôi có thể giúp gì?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="请问CA1234航班还飞吗？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>请问CA1234航班还飞吗？</div>
+                    <div class="pinyin">qǐngwèn CA1234 hángbān hái fēi ma?</div>
+                    <div class="vn">Cho hỏi chuyến CA1234 còn bay không?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="目前只是晚点，请留意广播通知。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>目前只是晚点，请留意广播通知。</div>
+                    <div class="pinyin">mùqián zhǐshì wǎndiǎn, qǐng liúyì guǎngbō tōngzhī.</div>
+                    <div class="vn">Hiện chỉ muộn thôi, chú ý thông báo loa.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-vocab">Từ vựng cần dùng</span>
+            <div class="vocab-tags"><span>机场</span><span>航班</span><span>晚点</span><span>取消</span><span>登机口</span><span>登机牌</span><span>机票</span></div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ========== 4 ========== -->
+    <article class="scenario">
+      <div class="scenario-head">
+        <div class="num">4</div>
+        <div class="title-block">
+          <h3>“Nhập cảnh tại Trung Quốc” – Qua cửa hải quan</h3>
+          <div class="sub">Du khách Việt Nam và nhân viên hải quan</div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-body-inner">
+
+          <div class="block">
+            <span class="block-label label-context">Bối cảnh</span>
+            <p>Một du khách Việt Nam đến <strong>入境</strong> (nhập cảnh) Trung Quốc. Nhân viên <strong>海关</strong> (hải quan) kiểm tra giấy tờ.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-roles">Nhân vật</span>
+            <ul>
+              <li><strong>Nhân viên hải quan:</strong> Hỏi mục đích <strong>入境</strong>, kiểm tra <strong>签证</strong>, <strong>护照</strong>, <strong>回程机票</strong>.</li>
+              <li><strong>Du khách:</strong> Trả lời trung thực, xuất trình giấy tờ.</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-tasks">Yêu cầu luyện nói</span>
+            <ul>
+              <li>Yêu cầu xuất trình <strong>护照</strong> và <strong>签证</strong>.</li>
+              <li>Hỏi mục đích <strong>入境</strong> (du lịch, công tác...).</li>
+              <li>Yêu cầu xuất trình <strong>回程机票</strong>.</li>
+              <li>Hỏi về <strong>行李</strong> có gì cần khai báo không.</li>
+            </ul>
+          </div>
+
+          <!-- BƯỚC 1 -->
+          <div class="block">
+            <div class="answer-part part-free">
+              <div class="part-header">
+                <span class="part-badge badge-free">BƯỚC 1</span>
+                <span class="part-title">🗣 Tự trả lời theo ý mình</span>
+              </div>
+              <p class="part-desc">Bạn đóng vai <strong>du khách</strong>. Nghe hải quan hỏi rồi trả lời to lên. Chưa xem đáp án bên dưới!</p>
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="free4">▶ Nghe tất cả câu hỏi</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="practice-list" id="free4">
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="请出示您的护照和签证。">🔊</button>
+                    <div>
+                      <div class="d-cn">请出示您的护照和签证。</div>
+                      <div class="pinyin">qǐng chūshì nín de hùzhào hé qiānzhèng.</div>
+                      <div class="vn">Vui lòng xuất trình hộ chiếu và visa.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s4-q1" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="您来中国的目的是什么？">🔊</button>
+                    <div>
+                      <div class="d-cn">您来中国的目的是什么？</div>
+                      <div class="pinyin">nín lái Zhōngguó de mùdì shì shénme?</div>
+                      <div class="vn">Mục đích bạn đến Trung Quốc là gì?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s4-q2" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="请出示您的回程机票。">🔊</button>
+                    <div>
+                      <div class="d-cn">请出示您的回程机票。</div>
+                      <div class="pinyin">qǐng chūshì nín de huíchéng jīpiào.</div>
+                      <div class="vn">Vui lòng xuất trình vé về.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s4-q3" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="您的行李里有没有需要申报的物品？">🔊</button>
+                    <div>
+                      <div class="d-cn">您的行李里有没有需要申报的物品？</div>
+                      <div class="pinyin">nín de xínglǐ lǐ yǒu méiyǒu xūyào shēnbào de wùpǐn?</div>
+                      <div class="vn">Trong hành lý có đồ cần khai báo không?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s4-q4" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="answer-part part-guide">
+              <div class="part-header">
+                <span class="part-badge badge-guide">BƯỚC 2</span>
+                <span class="part-title">📖 Hướng dẫn trả lời</span>
+              </div>
+              <p class="part-desc">So sánh câu trả lời của bạn với gợi ý bên dưới. Không cần giống hệt — chỉ cần đúng ý và đúng ngữ pháp là được.</p>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="请出示您的护照和签证。">🔊</button>
+                  <div>
+                    <div class="d-cn">请出示您的护照和签证。</div>
+                    <div class="pinyin">qǐng chūshì nín de hùzhào hé qiānzhèng.</div>
+                    <div class="vn">Vui lòng xuất trình hộ chiếu và visa.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="好的，给您。">🔊</button>
+                  <div>
+                    <div class="d-cn">好的，给您。</div>
+                    <div class="pinyin">hǎo de, gěi nín.</div>
+                    <div class="vn">Vâng, đây ạ.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="您来中国的目的是什么？">🔊</button>
+                  <div>
+                    <div class="d-cn">您来中国的目的是什么？</div>
+                    <div class="pinyin">nín lái Zhōngguó de mùdì shì shénme?</div>
+                    <div class="vn">Mục đích bạn đến Trung Quốc là gì?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="我是来旅游的，打算待半个月。">🔊</button>
+                  <div>
+                    <div class="d-cn">我是来旅游的，打算待半个月。</div>
+                    <div class="pinyin">wǒ shì lái lǚyóu de, dǎsuàn dāi bàn ge yuè.</div>
+                    <div class="vn">Tôi đến du lịch, định ở nửa tháng.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="请出示您的回程机票。">🔊</button>
+                  <div>
+                    <div class="d-cn">请出示您的回程机票。</div>
+                    <div class="pinyin">qǐng chūshì nín de huíchéng jīpiào.</div>
+                    <div class="vn">Vui lòng xuất trình vé về.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="好的，这是回程机票的订单。">🔊</button>
+                  <div>
+                    <div class="d-cn">好的，这是回程机票的订单。</div>
+                    <div class="pinyin">hǎo de, zhè shì huíchéng jīpiào de dìngdān.</div>
+                    <div class="vn">Vâng, đây là đơn đặt vé về.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="您的行李里有没有需要申报的物品？">🔊</button>
+                  <div>
+                    <div class="d-cn">您的行李里有没有需要申报的物品？</div>
+                    <div class="pinyin">nín de xínglǐ lǐ yǒu méiyǒu xūyào shēnbào de wùpǐn?</div>
+                    <div class="vn">Trong hành lý có đồ cần khai báo không?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="没有，都是个人用品。">🔊</button>
+                  <div>
+                    <div class="d-cn">没有，都是个人用品。</div>
+                    <div class="pinyin">méiyǒu, dōu shì gèrén yòngpǐn.</div>
+                    <div class="vn">Không, đều là đồ cá nhân.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL DIALOGUE -->
+          <div class="block">
+            <button class="full-dialogue-toggle" data-target="dlg4-full">🎬 Xem toàn bộ hội thoại mẫu (mở rộng)</button>
+            <div class="full-dialogue-wrap hidden" id="dlg4-full">
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="dlg4">▶ Phát toàn bộ hội thoại</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="dialogue" id="dlg4">
+                <div class="d-line">
+                  <button class="play-btn" data-text="请出示您的护照和签证。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">海关</span>请出示您的护照和签证。</div>
+                    <div class="pinyin">qǐng chūshì nín de hùzhào hé qiānzhèng.</div>
+                    <div class="vn">Vui lòng xuất trình hộ chiếu và visa.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好的，给您。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>好的，给您。</div>
+                    <div class="pinyin">hǎo de, gěi nín.</div>
+                    <div class="vn">Vâng, đây ạ.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="您来中国的目的是什么？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">海关</span>您来中国的目的是什么？</div>
+                    <div class="pinyin">nín lái Zhōngguó de mùdì shì shénme?</div>
+                    <div class="vn">Mục đích bạn đến Trung Quốc là gì?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="我是来旅游的，打算待半个月。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>我是来旅游的，打算待半个月。</div>
+                    <div class="pinyin">wǒ shì lái lǚyóu de, dǎsuàn dāi bàn ge yuè.</div>
+                    <div class="vn">Tôi đến du lịch, định ở nửa tháng.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="请出示您的回程机票。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">海关</span>请出示您的回程机票。</div>
+                    <div class="pinyin">qǐng chūshì nín de huíchéng jīpiào.</div>
+                    <div class="vn">Vui lòng xuất trình vé về.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好的，这是回程机票的订单。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>好的，这是回程机票的订单。</div>
+                    <div class="pinyin">hǎo de, zhè shì huíchéng jīpiào de dìngdān.</div>
+                    <div class="vn">Vâng, đây là đơn đặt vé về.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="您的行李里有没有需要申报的物品？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">海关</span>您的行李里有没有需要申报的物品？</div>
+                    <div class="pinyin">nín de xínglǐ lǐ yǒu méiyǒu xūyào shēnbào de wùpǐn?</div>
+                    <div class="vn">Trong hành lý có đồ cần khai báo không?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="没有，都是个人用品。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>没有，都是个人用品。</div>
+                    <div class="pinyin">méiyǒu, dōu shì gèrén yòngpǐn.</div>
+                    <div class="vn">Không, đều là đồ cá nhân.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好的，盖章了，祝您旅途愉快。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">海关</span>好的，盖章了，祝您旅途愉快。</div>
+                    <div class="pinyin">hǎo de, gàizhāng le, zhù nín lǚtú yúkuài.</div>
+                    <div class="vn">Được, đóng dấu rồi, chúc chuyến đi vui vẻ.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-vocab">Từ vựng cần dùng</span>
+            <div class="vocab-tags"><span>入境</span><span>海关</span><span>护照</span><span>签证</span><span>回程机票</span><span>行李</span></div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ========== 5 ========== -->
+    <article class="scenario">
+      <div class="scenario-head">
+        <div class="num">5</div>
+        <div class="title-block">
+          <h3>“Lạc mất hành lý” – Sự cố tại băng chuyền hành lý</h3>
+          <div class="sub">Hành khách hỏi quầy thất lạc hành lý</div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-body-inner">
+
+          <div class="block">
+            <span class="block-label label-context">Bối cảnh</span>
+            <p>Sau khi <strong>入境</strong> xong, một hành khách đứng đợi ở băng chuyền <strong>行李</strong> nhưng mãi không thấy vali của mình. Người đó đến quầy thất lạc hành lý để hỏi.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-roles">Nhân vật</span>
+            <ul>
+              <li><strong>Hành khách:</strong> Mô tả <strong>行李</strong> bị mất, xuất trình <strong>登机牌</strong> và <strong>护照</strong>.</li>
+              <li><strong>Nhân viên sân bay:</strong> Hỏi thông tin, kiểm tra hệ thống.</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-tasks">Yêu cầu luyện nói</span>
+            <ul>
+              <li>Mô tả <strong>行李</strong> (màu sắc, kích thước, có <strong>托运</strong> không).</li>
+              <li>Xuất trình <strong>登机牌</strong> và <strong>护照</strong> để xác minh.</li>
+              <li>Hỏi về <strong>航班</strong> số mấy, <strong>登机口</strong> nào.</li>
+              <li>Nhân viên hứa sẽ tìm và liên lạc.</li>
+            </ul>
+          </div>
+
+          <!-- BƯỚC 1 -->
+          <div class="block">
+            <div class="answer-part part-free">
+              <div class="part-header">
+                <span class="part-badge badge-free">BƯỚC 1</span>
+                <span class="part-title">🗣 Tự trả lời theo ý mình</span>
+              </div>
+              <p class="part-desc">Bạn đóng vai <strong>hành khách</strong>. Nghe nhân viên hỏi rồi trả lời to lên. Chưa xem đáp án bên dưới!</p>
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="free5">▶ Nghe tất cả câu hỏi</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="practice-list" id="free5">
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="请告诉我您的航班号。">🔊</button>
+                    <div>
+                      <div class="d-cn">请告诉我您的航班号。</div>
+                      <div class="pinyin">qǐng gàosu wǒ nín de hángbān hào.</div>
+                      <div class="vn">Cho tôi biết số chuyến bay.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s5-q1" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="请出示您的登机牌和护照。">🔊</button>
+                    <div>
+                      <div class="d-cn">请出示您的登机牌和护照。</div>
+                      <div class="pinyin">qǐng chūshì nín de dēngjīpái hé hùzhào.</div>
+                      <div class="vn">Vui lòng xuất trình thẻ lên máy bay và hộ chiếu.</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s5-q2" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="您在哪个行李转盘等的？">🔊</button>
+                    <div>
+                      <div class="d-cn">您在哪个行李转盘等的？</div>
+                      <div class="pinyin">nín zài nǎge xínglǐ zhuànpán děng de?</div>
+                      <div class="vn">Bạn đợi ở băng chuyền nào?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s5-q3" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="answer-part part-guide">
+              <div class="part-header">
+                <span class="part-badge badge-guide">BƯỚC 2</span>
+                <span class="part-title">📖 Hướng dẫn trả lời</span>
+              </div>
+              <p class="part-desc">So sánh câu trả lời của bạn với gợi ý bên dưới. Không cần giống hệt — chỉ cần đúng ý và đúng ngữ pháp là được.</p>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="请告诉我您的航班号。">🔊</button>
+                  <div>
+                    <div class="d-cn">请告诉我您的航班号。</div>
+                    <div class="pinyin">qǐng gàosu wǒ nín de hángbān hào.</div>
+                    <div class="vn">Cho tôi biết số chuyến bay.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="我的航班是CA1234，从河内飞来的。">🔊</button>
+                  <div>
+                    <div class="d-cn">我的航班是CA1234，从河内飞来的。</div>
+                    <div class="pinyin">wǒ de hángbān shì CA1234, cóng Hénèi fēi lái de.</div>
+                    <div class="vn">Chuyến tôi là CA1234, từ Hà Nội bay đến.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="请出示您的登机牌和护照。">🔊</button>
+                  <div>
+                    <div class="d-cn">请出示您的登机牌和护照。</div>
+                    <div class="pinyin">qǐng chūshì nín de dēngjīpái hé hùzhào.</div>
+                    <div class="vn">Vui lòng xuất trình thẻ lên máy bay và hộ chiếu.</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="给您。我的箱子是黑色的，很大，已经办理了托运。">🔊</button>
+                  <div>
+                    <div class="d-cn">给您。我的箱子是黑色的，很大，已经办理了托运。</div>
+                    <div class="pinyin">gěi nín. wǒ de xiāngzi shì hēisè de, hěn dà, yǐjīng bànlǐ le tuōyùn.</div>
+                    <div class="vn">Đây ạ. Vali tôi màu đen, to, đã ký gửi.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="您在哪个行李转盘等的？">🔊</button>
+                  <div>
+                    <div class="d-cn">您在哪个行李转盘等的？</div>
+                    <div class="pinyin">nín zài nǎge xínglǐ zhuànpán děng de?</div>
+                    <div class="vn">Bạn đợi ở băng chuyền nào?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="我在5号转盘等了好久，但是没看到。">🔊</button>
+                  <div>
+                    <div class="d-cn">我在5号转盘等了好久，但是没看到。</div>
+                    <div class="pinyin">wǒ zài wǔ hào zhuànpán děng le hǎojiǔ, dànshì méi kàndào.</div>
+                    <div class="vn">Tôi đợi ở băng chuyền số 5 lâu lắm mà không thấy.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL DIALOGUE -->
+          <div class="block">
+            <button class="full-dialogue-toggle" data-target="dlg5-full">🎬 Xem toàn bộ hội thoại mẫu (mở rộng)</button>
+            <div class="full-dialogue-wrap hidden" id="dlg5-full">
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="dlg5">▶ Phát toàn bộ hội thoại</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="dialogue" id="dlg5">
+                <div class="d-line">
+                  <button class="play-btn" data-text="你好，我的行李不见了！">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>你好，我的行李不见了！</div>
+                    <div class="pinyin">nǐ hǎo, wǒ de xínglǐ bújiàn le!</div>
+                    <div class="vn">Chào, hành lý của tôi mất rồi!</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="别着急，请告诉我您的航班号。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>别着急，请告诉我您的航班号。</div>
+                    <div class="pinyin">bié zháojí, qǐng gàosu wǒ nín de hángbān hào.</div>
+                    <div class="vn">Đừng lo, cho tôi biết số chuyến bay.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="我的航班是CA1234，从河内飞来的。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>我的航班是CA1234，从河内飞来的。</div>
+                    <div class="pinyin">wǒ de hángbān shì CA1234, cóng Hénèi fēi lái de.</div>
+                    <div class="vn">Chuyến tôi là CA1234, từ Hà Nội bay đến.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="请出示您的登机牌和护照。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>请出示您的登机牌和护照。</div>
+                    <div class="pinyin">qǐng chūshì nín de dēngjīpái hé hùzhào.</div>
+                    <div class="vn">Vui lòng xuất trình thẻ lên máy bay và hộ chiếu.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="给您。我的箱子是黑色的，很大，已经办理了托运。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>给您。我的箱子是黑色的，很大，已经办理了托运。</div>
+                    <div class="pinyin">gěi nín. wǒ de xiāngzi shì hēisè de, hěn dà, yǐjīng bànlǐ le tuōyùn.</div>
+                    <div class="vn">Đây ạ. Vali tôi màu đen, to, đã ký gửi.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="您在哪个行李转盘等的？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>您在哪个行李转盘等的？</div>
+                    <div class="pinyin">nín zài nǎge xínglǐ zhuànpán děng de?</div>
+                    <div class="vn">Bạn đợi ở băng chuyền nào?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="我在5号转盘等了好久，但是没看到。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>我在5号转盘等了好久，但是没看到。</div>
+                    <div class="pinyin">wǒ zài wǔ hào zhuànpán děng le hǎojiǔ, dànshì méi kàndào.</div>
+                    <div class="vn">Tôi đợi ở băng chuyền số 5 lâu lắm mà không thấy.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="我查一下系统。找到了，您的行李还在河内，明天才能到。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>我查一下系统。……找到了，您的行李还在河内，明天才能到。</div>
+                    <div class="pinyin">wǒ chá yíxià xìtǒng. …… zhǎodào le, nín de xínglǐ hái zài Hénèi, míngtiān cái néng dào.</div>
+                    <div class="vn">Tôi tra hệ thống. … Tìm thấy rồi, hành lý của bạn còn ở Hà Nội, mai mới đến.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="那怎么办？我明天就要用的东西都在里面。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">旅客</span>那怎么办？我明天就要用的东西都在里面。</div>
+                    <div class="pinyin">nà zěnme bàn? wǒ míngtiān jiù yào yòng de dōngxi dōu zài lǐmiàn.</div>
+                    <div class="vn">Vậy làm sao? Đồ tôi cần dùng mai đều ở trong đó.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="我们可以把行李寄到您的酒店，请留一下地址和电话。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-staff">工作人员</span>我们可以把行李寄到您的酒店，请留一下地址和电话。</div>
+                    <div class="pinyin">wǒmen kěyǐ bǎ xínglǐ jì dào nín de jiǔdiàn, qǐng liú yíxià dìzhǐ hé diànhuà.</div>
+                    <div class="vn">Chúng tôi có thể gửi hành lý đến khách sạn, vui lòng để lại địa chỉ và điện thoại.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-vocab">Từ vựng cần dùng</span>
+            <div class="vocab-tags"><span>行李</span><span>托运</span><span>登机牌</span><span>护照</span><span>航班</span><span>入境</span><span>机场</span></div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+    <!-- ========== 6 ========== -->
+    <article class="scenario">
+      <div class="scenario-head">
+        <div class="num">6</div>
+        <div class="title-block">
+          <h3>“Về nước rồi!” – Kết thúc chuyến đi</h3>
+          <div class="sub">Hai bạn nói chuyện khi đợi ở 登机口</div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-body-inner">
+
+          <div class="block">
+            <span class="block-label label-context">Bối cảnh</span>
+            <p>Hai bạn kết thúc chuyến du lịch Trung Quốc, chuẩn bị bay về Việt Nam. Họ nói chuyện trong lúc đợi ở <strong>登机口</strong>.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-roles">Nhân vật</span>
+            <ul>
+              <li><strong>A:</strong> Hỏi về <strong>回程机票</strong>, <strong>登机牌</strong>, <strong>登机口</strong>.</li>
+              <li><strong>B:</strong> Kiểm tra lại giấy tờ, <strong>行李</strong> xách tay.</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-tasks">Yêu cầu luyện nói</span>
+            <ul>
+              <li>Kiểm tra <strong>回程机票</strong> và <strong>登机牌</strong>.</li>
+              <li>Hỏi <strong>登机口</strong> số mấy, giờ <strong>登机</strong> chưa.</li>
+              <li>Nhắc nhau cầm <strong>护照</strong> và <strong>登机牌</strong> trên tay.</li>
+              <li>Nói về kỷ niệm chuyến đi, hẹn lần sau.</li>
+            </ul>
+          </div>
+
+          <!-- BƯỚC 1 -->
+          <div class="block">
+            <div class="answer-part part-free">
+              <div class="part-header">
+                <span class="part-badge badge-free">BƯỚC 1</span>
+                <span class="part-title">🗣 Tự trả lời theo ý mình</span>
+              </div>
+              <p class="part-desc">Bạn đóng vai <strong>B</strong>. Nghe A hỏi rồi trả lời to lên. Chưa xem đáp án bên dưới!</p>
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="free6">▶ Nghe tất cả câu hỏi</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="practice-list" id="free6">
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="你的回程机票和登机牌拿好了吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">你的回程机票和登机牌拿好了吗？</div>
+                      <div class="pinyin">nǐ de huíchéng jīpiào hé dēngjīpái ná hǎo le ma?</div>
+                      <div class="vn">Bạn cầm vé về và thẻ lên máy bay chưa?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s6-q1" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="我们的登机口是几号？">🔊</button>
+                    <div>
+                      <div class="d-cn">我们的登机口是几号？</div>
+                      <div class="pinyin">wǒmen de dēngjīkǒu shì jǐ hào?</div>
+                      <div class="vn">Cửa lên máy bay của chúng ta số mấy?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s6-q2" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+                <div class="practice-item">
+                  <div class="p-q">
+                    <button class="play-btn" data-text="你的行李托运了吗？">🔊</button>
+                    <div>
+                      <div class="d-cn">你的行李托运了吗？</div>
+                      <div class="pinyin">nǐ de xínglǐ tuōyùn le ma?</div>
+                      <div class="vn">Hành lý bạn ký gửi chưa?</div>
+                    </div>
+                  </div>
+                  <textarea class="answer-input" data-note-key="s6-q3" placeholder="💭 Ghi chú câu trả lời của bạn (không bắt buộc)..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="answer-part part-guide">
+              <div class="part-header">
+                <span class="part-badge badge-guide">BƯỚC 2</span>
+                <span class="part-title">📖 Hướng dẫn trả lời</span>
+              </div>
+              <p class="part-desc">So sánh câu trả lời của bạn với gợi ý bên dưới. Không cần giống hệt — chỉ cần đúng ý và đúng ngữ pháp là được.</p>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="你的回程机票和登机牌拿好了吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">你的回程机票和登机牌拿好了吗？</div>
+                    <div class="pinyin">nǐ de huíchéng jīpiào hé dēngjīpái ná hǎo le ma?</div>
+                    <div class="vn">Bạn cầm vé về và thẻ lên máy bay chưa?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="拿好了。">🔊</button>
+                  <div>
+                    <div class="d-cn">拿好了。</div>
+                    <div class="pinyin">ná hǎo le.</div>
+                    <div class="vn">Cầm rồi.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="我们的登机口是几号？">🔊</button>
+                  <div>
+                    <div class="d-cn">我们的登机口是几号？</div>
+                    <div class="pinyin">wǒmen de dēngjīkǒu shì jǐ hào?</div>
+                    <div class="vn">Cửa lên máy bay số mấy?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="是B12。">🔊</button>
+                  <div>
+                    <div class="d-cn">是B12。</div>
+                    <div class="pinyin">shì B12.</div>
+                    <div class="vn">Là B12.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qa-pair">
+                <div class="p-q">
+                  <button class="play-btn" data-text="你的行李托运了吗？">🔊</button>
+                  <div>
+                    <div class="d-cn">你的行李托运了吗？</div>
+                    <div class="pinyin">nǐ de xínglǐ tuōyùn le ma?</div>
+                    <div class="vn">Hành lý bạn ký gửi chưa?</div>
+                  </div>
+                </div>
+                <div class="p-a">
+                  <button class="play-btn" data-text="托运了，随身只带了一个小包。">🔊</button>
+                  <div>
+                    <div class="d-cn">托运了，随身只带了一个小包。</div>
+                    <div class="pinyin">tuōyùn le, suíshēn zhǐ dài le yí ge xiǎo bāo.</div>
+                    <div class="vn">Ký gửi rồi, xách tay chỉ một túi nhỏ.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL DIALOGUE -->
+          <div class="block">
+            <button class="full-dialogue-toggle" data-target="dlg6-full">🎬 Xem toàn bộ hội thoại mẫu (mở rộng)</button>
+            <div class="full-dialogue-wrap hidden" id="dlg6-full">
+              <div class="dialogue-toolbar">
+                <button class="btn-play-all" data-target="dlg6">▶ Phát toàn bộ hội thoại</button>
+                <button class="btn-stop">⏹ Dừng</button>
+              </div>
+              <div class="dialogue" id="dlg6">
+                <div class="d-line">
+                  <button class="play-btn" data-text="你的回程机票和登机牌拿好了吗？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>你的回程机票和登机牌拿好了吗？</div>
+                    <div class="pinyin">nǐ de huíchéng jīpiào hé dēngjīpái ná hǎo le ma?</div>
+                    <div class="vn">Bạn cầm vé về và thẻ lên máy bay chưa?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="拿好了。我们的登机口是几号？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>拿好了。我们的登机口是几号？</div>
+                    <div class="pinyin">ná hǎo le. wǒmen de dēngjīkǒu shì jǐ hào?</div>
+                    <div class="vn">Cầm rồi. Cửa lên máy bay số mấy?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="我看一下，是B12。广播说马上就要登机了。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>我看一下……是B12。广播说马上就要登机了。</div>
+                    <div class="pinyin">wǒ kàn yíxià …… shì B12. guǎngbō shuō mǎshàng jiù yào dēngjī le.</div>
+                    <div class="vn">Để tôi xem… là B12. Loa nói sắp lên máy bay rồi.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="那我们快过去吧。护照和登机牌要拿在手里。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>那我们快过去吧。护照和登机牌要拿在手里。</div>
+                    <div class="pinyin">nà wǒmen kuài guòqù ba. hùzhào hé dēngjīpái yào ná zài shǒu lǐ.</div>
+                    <div class="vn">Vậy mau qua đó. Hộ chiếu và thẻ phải cầm tay.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="对了，你的行李托运了吗？">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>对了，你的行李托运了吗？</div>
+                    <div class="pinyin">duì le, nǐ de xínglǐ tuōyùn le ma?</div>
+                    <div class="vn">À, hành lý bạn ký gửi chưa?</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="托运了，随身只带了一个小包。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>托运了，随身只带了一个小包。</div>
+                    <div class="pinyin">tuōyùn le, suíshēn zhǐ dài le yí ge xiǎo bāo.</div>
+                    <div class="vn">Ký gửi rồi, xách tay chỉ một túi nhỏ.</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="这次旅行太开心了，下次我们再去中国玩！">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-A">A</span>这次旅行太开心了，下次我们再去中国玩！</div>
+                    <div class="pinyin">zhè cì lǚxíng tài kāixīn le, xià cì wǒmen zài qù Zhōngguó wán!</div>
+                    <div class="vn">Chuyến đi vui quá, lần sau lại đi Trung Quốc!</div>
+                  </div>
+                </div>
+                <div class="d-line">
+                  <button class="play-btn" data-text="好啊！下次我想去上海。">🔊</button>
+                  <div class="d-body">
+                    <div class="d-cn"><span class="speaker sp-B">B</span>好啊！下次我想去上海。</div>
+                    <div class="pinyin">hǎo a! xià cì wǒ xiǎng qù Shànghǎi.</div>
+                    <div class="vn">Được! Lần sau tôi muốn đi Thượng Hải.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label label-vocab">Từ vựng cần dùng</span>
+            <div class="vocab-tags"><span>回程机票</span><span>登机牌</span><span>登机口</span><span>护照</span><span>行李</span><span>航班</span></div>
+          </div>
+
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ================= VOCAB TABLE ================= -->
+  <section id="vocab">
+    <div class="section-title"><span class="bar"></span>📚 Bảng tổng hợp từ vựng &amp; tình huống</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">Từ vựng</th>
+            <th style="width:28%">Phiên âm – Nghĩa</th>
+            <th>Tình huống sử dụng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cn-word">机场</td>
+            <td><span class="pinyin">jīchǎng</span> – Sân bay</td>
+            <td><div class="scene-badges"><b>1</b><b>3</b><b>5</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">航班</td>
+            <td><span class="pinyin">hángbān</span> – Chuyến bay</td>
+            <td><div class="scene-badges"><b>3</b><b>5</b><b>6</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">机票</td>
+            <td><span class="pinyin">jīpiào</span> – Vé máy bay</td>
+            <td><div class="scene-badges"><b>1</b><b>2</b><b>3</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">回程机票</td>
+            <td><span class="pinyin">huíchéng jīpiào</span> – Vé về</td>
+            <td><div class="scene-badges"><b>1</b><b>4</b><b>6</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">护照</td>
+            <td><span class="pinyin">hùzhào</span> – Hộ chiếu</td>
+            <td><div class="scene-badges"><b>1</b><b>2</b><b>4</b><b>5</b><b>6</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">签证</td>
+            <td><span class="pinyin">qiānzhèng</span> – Visa</td>
+            <td><div class="scene-badges"><b>1</b><b>4</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">行李</td>
+            <td><span class="pinyin">xínglǐ</span> – Hành lý</td>
+            <td><div class="scene-badges"><b>1</b><b>2</b><b>4</b><b>5</b><b>6</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">托运</td>
+            <td><span class="pinyin">tuōyùn</span> – Ký gửi</td>
+            <td><div class="scene-badges"><b>2</b><b>5</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">值机</td>
+            <td><span class="pinyin">zhíjī</span> – Check-in</td>
+            <td><div class="scene-badges"><b>2</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">登机牌</td>
+            <td><span class="pinyin">dēngjīpái</span> – Thẻ lên máy bay</td>
+            <td><div class="scene-badges"><b>2</b><b>3</b><b>5</b><b>6</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">登机口</td>
+            <td><span class="pinyin">dēngjīkǒu</span> – Cửa lên máy bay</td>
+            <td><div class="scene-badges"><b>2</b><b>3</b><b>6</b></div></td>
+          </tr>
+          <tr>
+            <td class="cn-word">入境</td>
+            <td><span class="pinyin">rùjìng</span> – Nhập cảnh</td>
+            <td><div class="scene-badges"><b>4</b><b>5</b></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= TIPS ================= -->
+  <section id="tips">
+    <div class="section-title"><span class="bar"></span>💡 Gợi ý tổ chức lớp học</div>
+    <div class="tips-grid">
+      <div class="tip">
+        <div class="tip-num">1</div>
+        <h4>Quy trình 2 bước</h4>
+        <p>Bắt buộc học sinh làm <strong>Bước 1</strong> trước (tự trả lời, chưa xem đáp án), sau đó mới mở <strong>Bước 2</strong> để đối chiếu.</p>
+      </div>
+      <div class="tip">
+        <div class="tip-num">2</div>
+        <h4>Đóng vai theo cặp</h4>
+        <p>Mỗi cặp chọn 1 tình huống: một bạn đọc câu hỏi, một bạn trả lời (Bước 1). Sau đó đổi vai và so với Bước 2.</p>
+      </div>
+      <div class="tip">
+        <div class="tip-num">3</div>
+        <h4>Ghi chú trên web</h4>
+        <p>Học sinh có thể gõ nhanh câu trả lời vào ô ghi chú — nội dung được lưu tự động trên trình duyệt, dùng lại được ở buổi sau.</p>
+      </div>
+      <div class="tip">
+        <div class="tip-num">4</div>
+        <h4>Mở rộng tình huống</h4>
+        <p>Sau khi so đáp án, yêu cầu học sinh thêm 1–2 câu hỏi phát sinh ngoài kịch bản để tăng tính tự nhiên.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>✈️ 机场口语练习</strong> · Luyện nói tiếng Trung theo tình huống thực tế<br>
+  Chúc các bạn học sinh luyện nói thật tốt! 🛫✨
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- SPEECH SYNTHESIS SETUP ---------- */
+  let zhVoice = null;
+  let currentRate = 1;
+
+  function loadVoices(){
+    if(!('speechSynthesis' in window)) return;
+    const voices = speechSynthesis.getVoices();
+    zhVoice = voices.find(function(v){ return /^zh[-_]CN/i.test(v.lang); })
+           || voices.find(function(v){ return /^zh/i.test(v.lang); })
+           || null;
+    const status = document.getElementById('voiceStatus');
+    if(status){
+      if(zhVoice){
+        status.textContent = '✓ Giọng đọc: ' + zhVoice.name;
+        status.className = 'voice-status ok';
+      } else if(voices.length){
+        status.textContent = '⚠ Không tìm thấy giọng Trung, dùng giọng mặc định';
+        status.className = 'voice-status warn';
+      }
+    }
+  }
+
+  if('speechSynthesis' in window){
+    speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+    setTimeout(loadVoices, 300);
+    setTimeout(loadVoices, 1000);
+    setTimeout(loadVoices, 2500);
+  } else {
+    const status = document.getElementById('voiceStatus');
+    if(status){
+      status.textContent = '⚠ Trình duyệt không hỗ trợ phát âm thanh';
+      status.className = 'voice-status warn';
+    }
+  }
+
+  function makeUtterance(text){
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-CN';
+    u.rate = currentRate;
+    if(zhVoice) u.voice = zhVoice;
+    return u;
+  }
+
+  function stopAll(){
+    if('speechSynthesis' in window) speechSynthesis.cancel();
+    document.querySelectorAll('.speaking').forEach(function(el){
+      el.classList.remove('speaking');
+    });
+  }
+
+  /* ---------- PLAY INDIVIDUAL LINE ---------- */
+  document.querySelectorAll('.play-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(!('speechSynthesis' in window)){
+        alert('Trình duyệt của bạn không hỗ trợ phát âm thanh.');
+        return;
+      }
+      const text = btn.getAttribute('data-text');
+      if(!text) return;
+      stopAll();
+      const u = makeUtterance(text);
+      btn.classList.add('speaking');
+      u.onend = function(){ btn.classList.remove('speaking'); };
+      u.onerror = function(){ btn.classList.remove('speaking'); };
+      speechSynthesis.speak(u);
+    });
+  });
+
+  /* ---------- PLAY WHOLE SECTION ---------- */
+  document.querySelectorAll('.btn-play-all').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(!('speechSynthesis' in window)){
+        alert('Trình duyệt của bạn không hỗ trợ phát âm thanh.');
+        return;
+      }
+      const targetId = btn.getAttribute('data-target');
+      const container = document.getElementById(targetId);
+      if(!container) return;
+      const lines = container.querySelectorAll('.d-cn');
+      if(!lines.length) return;
+
+      stopAll();
+      btn.classList.add('speaking');
+
+      lines.forEach(function(line, i){
+        const clone = line.cloneNode(true);
+        const sp = clone.querySelector('.speaker');
+        if(sp) sp.remove();
+        const text = clone.textContent.trim();
+        if(!text) return;
+        const u = makeUtterance(text);
+        if(i === lines.length - 1){
+          u.onend = function(){ btn.classList.remove('speaking'); };
+          u.onerror = function(){ btn.classList.remove('speaking'); };
+        }
+        speechSynthesis.speak(u);
+      });
+    });
+  });
+
+  /* ---------- STOP BUTTONS ---------- */
+  document.querySelectorAll('.stop-all, .btn-stop').forEach(function(btn){
+    btn.addEventListener('click', stopAll);
+  });
+
+  /* ---------- SPEED CONTROL ---------- */
+  document.querySelectorAll('.rate-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.rate-btn').forEach(function(b){
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      currentRate = parseFloat(btn.getAttribute('data-rate'));
+    });
+  });
+
+  /* ---------- FULL DIALOGUE TOGGLE ---------- */
+  document.querySelectorAll('.full-dialogue-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const wrap = document.getElementById(btn.getAttribute('data-target'));
+      if(!wrap) return;
+      const hidden = wrap.classList.toggle('hidden');
+      btn.textContent = hidden
+        ? '🎬 Xem toàn bộ hội thoại mẫu (mở rộng)'
+        : '🙈 Ẩn hội thoại mẫu';
+    });
+  });
+
+  /* ---------- ACCORDION ---------- */
+  document.querySelectorAll('.scenario-head').forEach(function(head){
+    head.addEventListener('click', function(){
+      const card = head.parentElement;
+      const wasOpen = card.classList.contains('open');
+      document.querySelectorAll('.scenario').forEach(function(c){
+        c.classList.remove('open');
+      });
+      if(!wasOpen){ card.classList.add('open'); }
+    });
+  });
+
+  /* ---------- SMOOTH SCROLL NAV ---------- */
+  document.querySelectorAll('.nav-inner a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const target = document.querySelector(this.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+
+  /* ---------- AUTO-SAVE NOTES (localStorage) ---------- */
+  document.querySelectorAll('.answer-input[data-note-key]').forEach(function(ta){
+    const key = 'airport-notes-' + ta.getAttribute('data-note-key');
+    try{
+      const saved = localStorage.getItem(key);
+      if(saved) ta.value = saved;
+    }catch(e){}
+    ta.addEventListener('input', function(){
+      try{ localStorage.setItem(key, ta.value); }catch(e){}
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

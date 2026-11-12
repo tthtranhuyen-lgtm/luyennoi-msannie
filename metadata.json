@@ -1,0 +1,6 @@
+{
+  "name": "HanYu FeiXing - Luyện Nói Tiếng Trung Sân Bay AI",
+  "description": "Ứng dụng luyện nói tiếng Trung qua 6 tình huống thực tế sân bay và phản hồi tức thì với Trí tuệ Nhân tạo Gemini.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

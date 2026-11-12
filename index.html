@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          var originalFetch = window.fetch ? window.fetch.bind(window) : undefined;
+          var currentFetch = originalFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function () {
+              return currentFetch;
+            },
+            set: function (newFetch) {
+              currentFetch = newFetch;
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        } catch (e) {
+          console.warn('Polyfill fetch property error:', e);
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HanYu FeiXing - Luyện Nói Tiếng Trung Sân Bay AI</title>
+    <meta name="description" content="Ứng dụng luyện nói tiếng Trung qua 6 tình huống thực tế sân bay và phản hồi tức thì với Trí tuệ Nhân tạo Gemini." />
+    <meta property="og:title" content="HanYu FeiXing - Luyện Nói Tiếng Trung Sân Bay AI" />
+    <meta property="og:description" content="Ứng dụng luyện nói tiếng Trung qua 6 tình huống thực tế sân bay và phản hồi tức thì với Trí tuệ Nhân tạo Gemini." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
