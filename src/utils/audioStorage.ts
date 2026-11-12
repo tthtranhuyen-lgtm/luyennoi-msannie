@@ -239,3 +239,15 @@ export function clearSubmission(questionId: string): void {
     // ignore
   }
 }
+
+export function formatSafeTime(timestamp?: number | string | null): string {
+  if (!timestamp) return '';
+  const num = typeof timestamp === 'number' ? timestamp : Number(timestamp);
+  if (isNaN(num) || num <= 0) return '';
+  try {
+    const d = new Date(num);
+    return isNaN(d.getTime()) ? '' : d.toLocaleTimeString('vi-VN');
+  } catch (e) {
+    return '';
+  }
+}

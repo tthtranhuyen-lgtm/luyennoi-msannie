@@ -21,6 +21,7 @@ import {
   updateTeacherReview,
   saveSubmission,
   clearSubmission,
+  formatSafeTime,
 } from '../utils/audioStorage';
 import { CURRICULUM_SCENARIOS } from '../data/curriculumData';
 import { speakChinese } from '../utils/speech';
@@ -348,7 +349,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
                         <span>Học sinh: {sub.studentName || 'Học viên'}</span>
                         <span>&bull;</span>
                         <Clock className="w-3 h-3 inline text-slate-400" />
-                        <span>{new Date(sub.timestamp).toLocaleTimeString('vi-VN')}</span>
+                        <span>{formatSafeTime(sub.timestamp)}</span>
                       </div>
                     </div>
                   </div>
@@ -511,7 +512,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-[11px] text-slate-500">
                       {sub.reviewedAt
-                        ? `Đã lưu lần cuối: ${new Date(sub.reviewedAt).toLocaleTimeString('vi-VN')}`
+                        ? `Đã lưu lần cuối: ${formatSafeTime(sub.reviewedAt)}`
                         : 'Chưa lưu đánh giá'}
                     </span>
 

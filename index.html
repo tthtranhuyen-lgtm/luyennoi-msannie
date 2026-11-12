@@ -5,20 +5,43 @@
     <script>
       (function () {
         try {
-          var originalFetch = window.fetch ? window.fetch.bind(window) : undefined;
-          var currentFetch = originalFetch;
-          Object.defineProperty(window, 'fetch', {
-            get: function () {
-              return currentFetch;
-            },
-            set: function (newFetch) {
-              currentFetch = newFetch;
-            },
-            configurable: true,
-            enumerable: true,
-          });
+          // Ensure Window.prototype.fetch has both getter and setter so browser extensions don't crash
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            var protoDesc = Object.getOwnPropertyDescriptor(Window.prototype, 'fetch');
+            if (protoDesc && !protoDesc.set && protoDesc.configurable) {
+              var pGet = protoDesc.get;
+              var pCustom = null;
+              Object.defineProperty(Window.prototype, 'fetch', {
+                get: function () {
+                  return pCustom || (pGet ? pGet.call(this) : window.fetch);
+                },
+                set: function (val) {
+                  pCustom = val;
+                },
+                configurable: true,
+                enumerable: true,
+              });
+            }
+          }
+
+          // Ensure window.fetch has both getter and setter
+          var winDesc = Object.getOwnPropertyDescriptor(window, 'fetch');
+          if (winDesc && !winDesc.set && winDesc.configurable) {
+            var wGet = winDesc.get;
+            var wCustom = null;
+            Object.defineProperty(window, 'fetch', {
+              get: function () {
+                return wCustom || (wGet ? wGet.call(window) : undefined);
+              },
+              set: function (val) {
+                wCustom = val;
+              },
+              configurable: true,
+              enumerable: true,
+            });
+          }
         } catch (e) {
-          console.warn('Polyfill fetch property error:', e);
+          // Never block page load
         }
       })();
     </script>
@@ -38,4 +61,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

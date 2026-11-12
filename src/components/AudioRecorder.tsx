@@ -9,7 +9,7 @@ import {
   GraduationCap,
   Sparkles,
 } from 'lucide-react';
-import { audioRecorder } from '../utils/audioStorage';
+import { audioRecorder, formatSafeTime } from '../utils/audioStorage';
 import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
 import { ChineseSpeechRecognizer } from '../utils/speech';
 
@@ -266,9 +266,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                 Trình phát âm thanh trình duyệt (Native Audio Player):
               </span>
               <span className="text-[11px] text-slate-400">
-                {submission?.timestamp
-                  ? new Date(submission.timestamp).toLocaleTimeString('vi-VN')
-                  : ''}
+                {formatSafeTime(submission?.timestamp)}
               </span>
             </div>
 
