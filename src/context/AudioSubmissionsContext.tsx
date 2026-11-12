@@ -47,12 +47,18 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
   const [submissions, setSubmissions] = useState<Record<string, StudentSubmission>>({});
 
   const reloadSubmissions = () => {
-    const list = getAllSubmissions();
-    const map: Record<string, StudentSubmission> = {};
-    list.forEach((sub) => {
-      map[sub.questionId] = sub;
-    });
-    setSubmissions(map);
+    try {
+      const list = getAllSubmissions();
+      const map: Record<string, StudentSubmission> = {};
+      list.forEach((sub) => {
+        if (sub && sub.questionId) {
+          map[sub.questionId] = sub;
+        }
+      });
+      setSubmissions(map);
+    } catch (e) {
+      console.warn('Lỗi nạp submissions:', e);
+    }
   };
 
   useEffect(() => {
@@ -62,10 +68,12 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       reloadSubmissions();
     };
 
-    window.addEventListener('hanyu-submissions-updated', handleUpdate);
-    return () => {
-      window.removeEventListener('hanyu-submissions-updated', handleUpdate);
-    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('hanyu-submissions-updated', handleUpdate);
+      return () => {
+        window.removeEventListener('hanyu-submissions-updated', handleUpdate);
+      };
+    }
   }, []);
 
   const saveAudioRecording = (
@@ -165,10 +173,32 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
   );
 };
 
+const fallbackContextValue: AudioSubmissionsContextType = {
+  submissions: {},
+  saveAudioRecording: (id, url, meta) => ({
+    scenarioId: meta.scenarioId,
+    scenarioTitle: meta.scenarioTitle,
+    questionId: id,
+    questionText: meta.questionText,
+    studentText: meta.studentText || '',
+    audioDataUrl: url,
+    timestamp: Date.now(),
+  }),
+  saveStudentText: (id, text, meta) => ({
+    scenarioId: meta?.scenarioId || 1,
+    questionId: id,
+    questionText: meta?.questionText || '',
+    studentText: text,
+    timestamp: Date.now(),
+  }),
+  gradeSubmission: () => null,
+  deleteSubmission: () => {},
+  getSubmission: (id) => getSubFromStorage(id),
+  allSubmissionsList: [],
+  reloadSubmissions: () => {},
+};
+
 export function useAudioSubmissions(): AudioSubmissionsContextType {
   const context = useContext(AudioSubmissionsContext);
-  if (!context) {
-    throw new Error('useAudioSubmissions must be used within an AudioSubmissionsProvider');
-  }
-  return context;
+  return context || fallbackContextValue;
 }

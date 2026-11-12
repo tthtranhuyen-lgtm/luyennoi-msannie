@@ -21,7 +21,7 @@ class AudioRecordingManager {
 
   public async startRecording(): Promise<void> {
     this.audioChunks = [];
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error('Trình duyệt không hỗ trợ thu âm MediaRecorder.');
     }
 
@@ -44,25 +44,33 @@ class AudioRecordingManager {
       }
 
       this.mediaRecorder.onstop = async () => {
-        const mimeType = this.mediaRecorder?.mimeType || 'audio/webm';
-        const blob = new Blob(this.audioChunks, { type: mimeType });
+        try {
+          const mimeType = this.mediaRecorder?.mimeType || 'audio/webm';
+          const blob = new Blob(this.audioChunks, { type: mimeType });
 
-        // Stop all media tracks to release microphone
-        if (this.stream) {
-          this.stream.getTracks().forEach((track) => track.stop());
-          this.stream = null;
+          // Stop all media tracks to release microphone
+          if (this.stream) {
+            this.stream.getTracks().forEach((track) => track.stop());
+            this.stream = null;
+          }
+
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const dataUrl = reader.result as string;
+            resolve({ blob, dataUrl });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        } catch (e) {
+          reject(e);
         }
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const dataUrl = reader.result as string;
-          resolve({ blob, dataUrl });
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
       };
 
-      this.mediaRecorder.stop();
+      try {
+        this.mediaRecorder.stop();
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 
@@ -75,7 +83,11 @@ class AudioRecordingManager {
       }
     }
     if (this.stream) {
-      this.stream.getTracks().forEach((track) => track.stop());
+      try {
+        this.stream.getTracks().forEach((track) => track.stop());
+      } catch (e) {
+        // ignore
+      }
       this.stream = null;
     }
     this.audioChunks = [];
@@ -84,8 +96,42 @@ class AudioRecordingManager {
 
 export const audioRecorder = new AudioRecordingManager();
 
-// Local storage helpers for recordings and teacher reviews
+// In-memory memory store fallback if localStorage is blocked by iframe security policy
+const inMemoryStore: Record<string, string> = {};
 const STORAGE_PREFIX = 'hanyu-submission-';
+
+function safeGetItem(key: string): string | null {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem(key);
+    }
+  } catch (e) {
+    // fallback
+  }
+  return inMemoryStore[key] || null;
+}
+
+function safeSetItem(key: string, value: string): void {
+  inMemoryStore[key] = value;
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(key, value);
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+function safeRemoveItem(key: string): void {
+  delete inMemoryStore[key];
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem(key);
+    }
+  } catch (e) {
+    // ignore
+  }
+}
 
 export function saveSubmission(
   questionId: string,
@@ -106,11 +152,13 @@ export function saveSubmission(
   };
 
   try {
-    localStorage.setItem(STORAGE_PREFIX + questionId, JSON.stringify(updated));
-    // Dispatch custom event so UI updates immediately across components
-    window.dispatchEvent(new CustomEvent('hanyu-submissions-updated', { detail: updated }));
+    safeSetItem(STORAGE_PREFIX + questionId, JSON.stringify(updated));
+    // Dispatch custom event safely
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('hanyu-submissions-updated', { detail: updated }));
+    }
   } catch (err) {
-    console.warn('Lỗi lưu bản ghi vào localStorage:', err);
+    console.warn('Lỗi lưu bản ghi:', err);
   }
 
   return updated;
@@ -133,7 +181,7 @@ export function updateTeacherReview(
 
 export function getSubmission(questionId: string): StudentSubmission | null {
   try {
-    const val = localStorage.getItem(STORAGE_PREFIX + questionId);
+    const val = safeGetItem(STORAGE_PREFIX + questionId);
     if (!val) return null;
     return JSON.parse(val);
   } catch (e) {
@@ -144,15 +192,18 @@ export function getSubmission(questionId: string): StudentSubmission | null {
 export function getAllSubmissions(): StudentSubmission[] {
   const submissions: StudentSubmission[] = [];
   try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith(STORAGE_PREFIX)) {
-        const val = localStorage.getItem(key);
-        if (val) {
-          try {
-            submissions.push(JSON.parse(val));
-          } catch (e) {
-            // ignore
+    // Read from localStorage if available
+    if (typeof window !== 'undefined' && window.localStorage) {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(STORAGE_PREFIX)) {
+          const val = safeGetItem(key);
+          if (val) {
+            try {
+              submissions.push(JSON.parse(val));
+            } catch (e) {
+              // ignore
+            }
           }
         }
       }
@@ -160,13 +211,30 @@ export function getAllSubmissions(): StudentSubmission[] {
   } catch (e) {
     console.warn('Lỗi đọc submissions:', e);
   }
+
+  // Also include any inMemory items not yet in submissions
+  Object.keys(inMemoryStore).forEach((key) => {
+    if (key.startsWith(STORAGE_PREFIX)) {
+      try {
+        const parsed = JSON.parse(inMemoryStore[key]);
+        if (!submissions.some((s) => s.questionId === parsed.questionId)) {
+          submissions.push(parsed);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  });
+
   return submissions.sort((a, b) => b.timestamp - a.timestamp);
 }
 
 export function clearSubmission(questionId: string): void {
+  safeRemoveItem(STORAGE_PREFIX + questionId);
   try {
-    localStorage.removeItem(STORAGE_PREFIX + questionId);
-    window.dispatchEvent(new CustomEvent('hanyu-submissions-updated'));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('hanyu-submissions-updated'));
+    }
   } catch (e) {
     // ignore
   }
