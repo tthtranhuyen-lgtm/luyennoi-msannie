@@ -5,20 +5,28 @@
     <script>
       (function () {
         try {
-          var _f = window.fetch;
-          if (_f) {
+          // Guard against extensions throwing when window.fetch has only a getter
+          var desc = Object.getOwnPropertyDescriptor(window, 'fetch');
+          if (desc && !desc.set && desc.configurable) {
+            var _orig = window.fetch.bind(window);
+            var _cur = _orig;
             Object.defineProperty(window, 'fetch', {
               get: function () {
-                return _f;
+                return _cur;
               },
               set: function (fn) {
-                _f = fn;
+                _cur = typeof fn === 'function' ? fn : _orig;
               },
               configurable: true,
               enumerable: true,
             });
           }
         } catch (e) {}
+
+        // Global error logger
+        window.addEventListener('error', function (e) {
+          console.error('[App Init Error]:', e.error || e.message);
+        });
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,7 +41,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="min-height: 100vh; background-color: #0f172a; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
+        <div style="max-width: 440px; width: 100%; background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 24px; padding: 36px 28px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+          <div style="font-size: 40px; margin-bottom: 16px;">✈️</div>
+          <h1 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.02em;">
+            机场口语练习 &bull; HanYu FeiXing
+          </h1>
+          <p style="font-size: 13px; font-weight: 600; color: #38bdf8; margin: 0 0 16px 0;">
+            Hệ Thống Luyện Nói Tiếng Trung Sân Bay
+          </p>
+          <p style="font-size: 12px; color: #94a3b8; margin: 0 0 24px 0; line-height: 1.6;">
+            Đang tải dữ liệu 6 tình huống thực tế &amp; cấu hình âm thanh giọng bản xứ...
+          </p>
+          <div style="width: 100%; height: 6px; background: rgba(148, 163, 184, 0.2); border-radius: 999px; overflow: hidden;">
+            <div style="width: 60%; height: 100%; background: linear-gradient(90deg, #38bdf8, #2563eb); border-radius: 999px; animation: pulse 1.5s infinite;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
