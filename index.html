@@ -5,44 +5,20 @@
     <script>
       (function () {
         try {
-          // Ensure Window.prototype.fetch has both getter and setter so browser extensions don't crash
-          if (typeof Window !== 'undefined' && Window.prototype) {
-            var protoDesc = Object.getOwnPropertyDescriptor(Window.prototype, 'fetch');
-            if (protoDesc && !protoDesc.set && protoDesc.configurable) {
-              var pGet = protoDesc.get;
-              var pCustom = null;
-              Object.defineProperty(Window.prototype, 'fetch', {
-                get: function () {
-                  return pCustom || (pGet ? pGet.call(this) : window.fetch);
-                },
-                set: function (val) {
-                  pCustom = val;
-                },
-                configurable: true,
-                enumerable: true,
-              });
-            }
-          }
-
-          // Ensure window.fetch has both getter and setter
-          var winDesc = Object.getOwnPropertyDescriptor(window, 'fetch');
-          if (winDesc && !winDesc.set && winDesc.configurable) {
-            var wGet = winDesc.get;
-            var wCustom = null;
+          var _f = window.fetch;
+          if (_f) {
             Object.defineProperty(window, 'fetch', {
               get: function () {
-                return wCustom || (wGet ? wGet.call(window) : undefined);
+                return _f;
               },
-              set: function (val) {
-                wCustom = val;
+              set: function (fn) {
+                _f = fn;
               },
               configurable: true,
               enumerable: true,
             });
           }
-        } catch (e) {
-          // Never block page load
-        }
+        } catch (e) {}
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

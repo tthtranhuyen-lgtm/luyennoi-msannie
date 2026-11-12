@@ -31,7 +31,7 @@ export default function App() {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 pt-16 pb-16">
+        <main className="flex-1 pt-8 pb-16">
           {activeTab === 'curriculum' && (
             <CurriculumScenarios
               showPinyin={showPinyin}

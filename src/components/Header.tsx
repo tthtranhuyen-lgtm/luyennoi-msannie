@@ -59,8 +59,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Standalone Floating Navigation & Controls Bar (No negative overflow clipping) */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 -mb-8 relative z-30">
+      {/* Standalone Navigation & Controls Bar */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-6 relative z-30">
         <nav aria-label="Điều hướng chính" className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-3 sm:p-4 text-slate-700">
           <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
             {/* Primary Module Tabs */}
