@@ -1,0 +1,150 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net: deny everything by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isBootstrappedTeacher() {
+      return isSignedIn()
+        && request.auth.token.email == 'tth.tranhuyen@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isBootstrappedTeacher()
+        || (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    function isValidAdmin(data) {
+      return data.keys().hasAll(['uid', 'grantedBy', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'grantedBy', 'createdAt'])
+        && isValidId(data.uid)
+        && data.grantedBy is string && data.grantedBy.size() >= 1 && data.grantedBy.size() <= 128
+        && data.createdAt is timestamp;
+    }
+
+    function isValidSubmission(data) {
+      return data.keys().hasAll([
+          'studentUid',
+          'studentName',
+          'questionId',
+          'scenarioId',
+          'questionText',
+          'studentText',
+          'timestamp',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'studentUid',
+          'studentName',
+          'questionId',
+          'scenarioId',
+          'scenarioTitle',
+          'questionText',
+          'studentText',
+          'audioDataUrl',
+          'timestamp',
+          'createdAt',
+          'updatedAt',
+          'teacherScore',
+          'teacherFeedback',
+          'reviewedAt'
+        ])
+        && data.studentUid is string && data.studentUid.size() >= 1 && data.studentUid.size() <= 128 && data.studentUid.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.studentName is string && data.studentName.size() >= 1 && data.studentName.size() <= 100
+        && data.questionId is string && data.questionId.size() >= 1 && data.questionId.size() <= 64 && data.questionId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.scenarioId is int && data.scenarioId >= 1 && data.scenarioId <= 20
+        && (!('scenarioTitle' in data) || (data.scenarioTitle is string && data.scenarioTitle.size() <= 200))
+        && data.questionText is string && data.questionText.size() >= 1 && data.questionText.size() <= 500
+        && data.studentText is string && data.studentText.size() <= 2000
+        && (!('audioDataUrl' in data) || (data.audioDataUrl is string && data.audioDataUrl.size() <= 850000))
+        && data.timestamp is int && data.timestamp > 0
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && (!('teacherScore' in data) || (data.teacherScore is number && data.teacherScore >= 0 && data.teacherScore <= 10))
+        && (!('teacherFeedback' in data) || (data.teacherFeedback is string && data.teacherFeedback.size() <= 2000))
+        && (!('reviewedAt' in data) || (data.reviewedAt is int && data.reviewedAt > 0));
+    }
+
+    // Read-only startup connectivity check
+    match /test/{docId} {
+      allow get: if isValidId(docId);
+      allow list, write: if false;
+    }
+
+    // Trusted teacher/admin registry
+    match /admins/{adminUid} {
+      allow get: if isSignedIn() && isValidId(adminUid) && (request.auth.uid == adminUid || isAdmin());
+      allow list: if isBootstrappedTeacher();
+      allow create: if isAdmin() && isValidId(adminUid) && isValidAdmin(incoming()) && incoming().uid == adminUid && incoming().createdAt == request.time;
+      allow update: if isAdmin() && isValidId(adminUid) && isValidAdmin(incoming()) && incoming().uid == existing().uid && incoming().createdAt == existing().createdAt;
+      allow delete: if isAdmin() && isValidId(adminUid);
+    }
+
+    // Cross-device student speaking submissions and teacher grading
+    match /submissions/{submissionId} {
+      allow get: if isSignedIn() && isValidId(submissionId) && (existing().studentUid == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (isBootstrappedTeacher() || existing().studentUid == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && isValidId(submissionId)
+        && isValidSubmission(incoming())
+        && incoming().studentUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && !('teacherScore' in incoming())
+        && !('teacherFeedback' in incoming())
+        && !('reviewedAt' in incoming());
+
+      allow update: if isSignedIn()
+        && isValidId(submissionId)
+        && isValidSubmission(incoming())
+        && incoming().studentUid == existing().studentUid
+        && incoming().questionId == existing().questionId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (existing().studentUid == request.auth.uid
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'studentName',
+              'scenarioTitle',
+              'questionText',
+              'studentText',
+              'audioDataUrl',
+              'timestamp',
+              'updatedAt'
+            ]))
+          ||
+          (isAdmin()
+            && incoming().diff(existing()).affectedKeys().hasOnly([
+              'teacherScore',
+              'teacherFeedback',
+              'reviewedAt',
+              'updatedAt'
+            ]))
+        );
+
+      allow delete: if isSignedIn() && isValidId(submissionId) && (existing().studentUid == request.auth.uid || isAdmin());
+    }
+  }
+}

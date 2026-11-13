@@ -7,6 +7,10 @@ import {
   Plane,
   Sparkles,
   BookOpen,
+  Cloud,
+  LogIn,
+  UserCheck,
+  AlertCircle,
 } from 'lucide-react';
 import {
   CURRICULUM_SCENARIOS,
@@ -28,7 +32,16 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
   showTranslation,
   speechRate,
 }) => {
-  const { getSubmission, saveStudentText } = useAudioSubmissions();
+  const {
+    getSubmission,
+    saveStudentText,
+    user,
+    studentDisplayName,
+    setStudentDisplayName,
+    signInWithGoogle,
+    authError,
+    cloudError,
+  } = useAudioSubmissions();
 
   // Accordion state (open first scenario by default)
   const [openScenarioId, setOpenScenarioId] = useState<number | null>(1);
@@ -165,6 +178,52 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Student Identity & Cloud Sync Status Bar */}
+      <div className="glass-card rounded-2xl p-4 sm:p-5 border border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex-1 space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <UserCheck className="w-4 h-4 text-blue-600" />
+            <span>Họ và tên học sinh (hiển thị cho giáo viên khi gửi bài ghi âm):</span>
+          </label>
+          <input
+            type="text"
+            value={studentDisplayName}
+            onChange={(e) => setStudentDisplayName(e.target.value)}
+            placeholder="Ví dụ: Nguyễn Minh Anh - Lớp 10A1"
+            maxLength={100}
+            className="w-full sm:max-w-md px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          />
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 shrink-0">
+          {user ? (
+            <div className="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+              <Cloud className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Đã kết nối đám mây: mọi bản ghi âm sẽ tự động gửi về cho Giáo viên</span>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={signInWithGoogle}
+              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all cursor-pointer"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Đăng nhập Google để gửi bài ghi âm cho Giáo viên</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {(authError || cloudError) && (
+        <div className="bg-rose-50 border border-rose-300 text-rose-800 rounded-2xl p-4 text-xs flex items-start gap-2.5">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+          <div className="space-y-1 font-medium">
+            {authError && <p>{authError}</p>}
+            {cloudError && <p>{cloudError}</p>}
+          </div>
+        </div>
+      )}
 
       {/* 6 Scenarios list */}
       <div className="space-y-6">

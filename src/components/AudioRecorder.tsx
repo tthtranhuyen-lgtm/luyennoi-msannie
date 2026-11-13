@@ -9,6 +9,9 @@ import {
   GraduationCap,
   Sparkles,
   Loader2,
+  Cloud,
+  UploadCloud,
+  LogIn,
 } from 'lucide-react';
 import { audioRecorder, formatSafeTime } from '../utils/audioStorage';
 import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
@@ -33,7 +36,16 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   onTranscriptRecorded,
   className = '',
 }) => {
-  const { getSubmission, saveAudioRecording, deleteSubmission } = useAudioSubmissions();
+  const {
+    getSubmission,
+    saveAudioRecording,
+    deleteSubmission,
+    user,
+    syncingQuestionId,
+    syncSubmissionNow,
+    signInWithGoogle,
+  } = useAudioSubmissions();
+  const isSyncingToCloud = syncingQuestionId === questionId;
 
   const submission = getSubmission(questionId);
   const [localAudioUrl, setLocalAudioUrl] = useState<string | undefined>(submission?.audioDataUrl);
@@ -224,10 +236,22 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
         </div>
 
         {audioDataUrl && !isRecording && !isSaving && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full">
-            <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Đã sẵn sàng cho giáo viên kiểm tra</span>
-          </span>
+          isSyncingToCloud ? (
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />
+              <span>Đang gửi lên Giáo viên...</span>
+            </span>
+          ) : submission?.syncedToCloud ? (
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full">
+              <Cloud className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Đã gửi lên Giáo viên (Đám mây)</span>
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+              <CheckCircle className="w-3.5 h-3.5 text-amber-600" />
+              <span>Đã lưu trên máy (Chưa gửi đám mây)</span>
+            </span>
+          )
         )}
       </div>
 
@@ -319,6 +343,37 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
               Trình duyệt của bạn không hỗ trợ phần tử âm thanh HTML5.
             </audio>
           </div>
+
+          {/* Prompt to send recording to Teacher cloud inbox if not yet signed in or not synced */}
+          {!user ? (
+            <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <p className="text-xs text-amber-900 font-medium">
+                Bản ghi hiện mới lưu trên máy bạn. Hãy đăng nhập Google để tự động gửi file ghi âm này về <strong>Góc Giáo Viên</strong>!
+              </p>
+              <button
+                type="button"
+                onClick={signInWithGoogle}
+                className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-xs transition-all cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Đăng nhập &amp; Gửi Giáo viên</span>
+              </button>
+            </div>
+          ) : !submission?.syncedToCloud && !isSyncingToCloud ? (
+            <div className="bg-blue-50/80 border border-blue-200 rounded-xl p-3 flex items-center justify-between gap-2.5">
+              <span className="text-xs text-blue-900 font-medium">
+                Bấm gửi nếu bạn muốn đồng bộ lại bản ghi này lên Góc Giáo Viên:
+              </span>
+              <button
+                type="button"
+                onClick={() => syncSubmissionNow(questionId)}
+                className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>Gửi bài cho Giáo viên</span>
+              </button>
+            </div>
+          ) : null}
 
           {/* Action buttons: Re-record, Download, Delete */}
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">

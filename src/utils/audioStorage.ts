@@ -2,6 +2,8 @@
 // Uses IndexedDB (for large audio files) + in-memory cache + localStorage metadata fallback
 
 export interface StudentSubmission {
+  id?: string; // Firestore document ID: ${studentUid}_${questionId}
+  studentUid?: string;
   scenarioId: number;
   scenarioTitle?: string;
   questionId: string;
@@ -13,6 +15,7 @@ export interface StudentSubmission {
   teacherScore?: number; // 0 - 10
   teacherFeedback?: string;
   reviewedAt?: number;
+  syncedToCloud?: boolean;
 }
 
 function pickSupportedAudioMimeType(): string | undefined {
@@ -60,9 +63,15 @@ class AudioRecordingManager {
     this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
     const preferredMime = pickSupportedAudioMimeType();
-    this.mediaRecorder = preferredMime
-      ? new MediaRecorder(this.stream, { mimeType: preferredMime })
-      : new MediaRecorder(this.stream);
+    try {
+      this.mediaRecorder = preferredMime
+        ? new MediaRecorder(this.stream, { mimeType: preferredMime, audioBitsPerSecond: 32000 })
+        : new MediaRecorder(this.stream, { audioBitsPerSecond: 32000 });
+    } catch {
+      this.mediaRecorder = preferredMime
+        ? new MediaRecorder(this.stream, { mimeType: preferredMime })
+        : new MediaRecorder(this.stream);
+    }
 
     this.activeMimeType = this.mediaRecorder.mimeType || preferredMime || 'audio/webm';
 

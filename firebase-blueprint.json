@@ -1,0 +1,152 @@
+{
+  "entities": {
+    "Submission": {
+      "title": "Student Speaking Submission",
+      "description": "A student's recorded audio response and transcript for an airport speaking scenario question, along with optional teacher grading.",
+      "type": "object",
+      "properties": {
+        "studentUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the student"
+        },
+        "studentName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Display name of the student"
+        },
+        "questionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Curriculum question identifier"
+        },
+        "scenarioId": {
+          "type": "integer",
+          "description": "Airport speaking scenario index (1-6)"
+        },
+        "scenarioTitle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Scenario title"
+        },
+        "questionText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Chinese prompt text"
+        },
+        "studentText": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Speech transcript or written draft"
+        },
+        "audioDataUrl": {
+          "type": "string",
+          "maxLength": 850000,
+          "description": "Compressed audio recording encoded as base64 data URL"
+        },
+        "timestamp": {
+          "type": "integer",
+          "description": "Client timestamp in milliseconds"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last update timestamp"
+        },
+        "teacherScore": {
+          "type": "number",
+          "description": "Score assigned by teacher (0-10)"
+        },
+        "teacherFeedback": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Pedagogical feedback from teacher"
+        },
+        "reviewedAt": {
+          "type": "integer",
+          "description": "Timestamp in milliseconds when teacher saved review"
+        }
+      },
+      "required": [
+        "studentUid",
+        "studentName",
+        "questionId",
+        "scenarioId",
+        "questionText",
+        "studentText",
+        "timestamp",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "Teacher Admin Role",
+      "description": "Trusted document granting teacher/admin access to review and grade student submissions.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "grantedBy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "grantedBy",
+        "createdAt"
+      ]
+    },
+    "ConnectionTest": {
+      "title": "Firestore Connection Health Check",
+      "description": "Read-only connection verification document.",
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/submissions/{submissionId}": {
+      "schema": {
+        "$ref": "#/entities/Submission"
+      },
+      "description": "Student speaking audio recordings and teacher evaluations"
+    },
+    "/admins/{adminUid}": {
+      "schema": {
+        "$ref": "#/entities/AdminUser"
+      },
+      "description": "Trusted teacher/admin accounts"
+    },
+    "/test/{docId}": {
+      "schema": {
+        "$ref": "#/entities/ConnectionTest"
+      },
+      "description": "Read-only connectivity probe"
+    }
+  }
+}

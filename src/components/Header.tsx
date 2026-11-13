@@ -1,6 +1,7 @@
 import React from 'react';
-import { Plane, Languages, BookOpen, GraduationCap, Zap, Square, Volume2 } from 'lucide-react';
+import { Plane, Languages, BookOpen, GraduationCap, Zap, Square, Volume2, LogIn, LogOut, Cloud } from 'lucide-react';
 import { stopSpeaking, getNativeVoiceDisplayName } from '../utils/speech';
+import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
 
 interface HeaderProps {
   activeTab: 'curriculum' | 'teacher' | 'vocabulary' | 'reflex';
@@ -23,6 +24,10 @@ export const Header: React.FC<HeaderProps> = ({
   speechRate,
   setSpeechRate,
 }) => {
+  const { user, isTeacherAdmin, allSubmissionsList, signInWithGoogle, signOutUser } =
+    useAudioSubmissions();
+  const pendingCount = allSubmissionsList.filter((s) => s.teacherScore === undefined).length;
+
   return (
     <header className="relative bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 text-white shadow-xl border-b border-blue-900/50">
       {/* Decorative background watermark with its own overflow-hidden to prevent cutting off outer elements */}
@@ -51,11 +56,39 @@ export const Header: React.FC<HeaderProps> = ({
           Nghe lại bài nói &bull; Giáo viên kiểm tra &amp; chấm điểm trực tiếp
         </p>
 
-        {/* Native Speaker Audio Badge */}
-        <div className="inline-flex items-center gap-2 mt-3.5 px-3.5 py-1 rounded-full bg-slate-900/90 border border-blue-400/30 text-[11px] text-blue-200 shadow-xs">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <Volume2 className="w-3 h-3 text-sky-300" />
-          <span>Đồng bộ âm thanh: {getNativeVoiceDisplayName()}</span>
+        {/* Native Speaker Audio & Cloud Sync Account Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-3.5">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-400/30 text-[11px] text-blue-200 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <Volume2 className="w-3 h-3 text-sky-300" />
+            <span>Đồng bộ âm thanh: {getNativeVoiceDisplayName()}</span>
+          </div>
+
+          {user ? (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-[11px] text-emerald-200 shadow-xs">
+              <Cloud className="w-3.5 h-3.5 text-emerald-300" />
+              <span className="font-semibold">
+                {isTeacherAdmin ? 'Giáo viên: ' : 'Học sinh: '}
+                <strong className="text-white">{user.displayName || user.email}</strong>
+              </span>
+              <button
+                onClick={signOutUser}
+                className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold transition-colors"
+                title="Đăng xuất tài khoản Google"
+              >
+                <LogOut className="w-3 h-3" />
+                <span>Thoát</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={signInWithGoogle}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 border border-blue-300/40 text-[11px] font-bold text-white shadow-md transition-all cursor-pointer"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Đăng nhập Google để gửi / nhận bài ghi âm</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -97,6 +130,11 @@ export const Header: React.FC<HeaderProps> = ({
                   className={`w-4 h-4 ${activeTab === 'teacher' ? 'text-amber-300' : 'text-amber-600'}`}
                 />
                 <span>Góc Giáo Viên (Kiểm Tra)</span>
+                {pendingCount > 0 && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full font-extrabold bg-rose-500 text-white">
+                    {pendingCount}
+                  </span>
+                )}
               </button>
 
               <button
