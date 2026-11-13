@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { QUICK_CHALLENGES, AIRPORT_ANNOUNCEMENTS } from '../data/chineseData';
 import { speakChinese, stopSpeaking, ChineseSpeechRecognizer } from '../utils/speech';
+import { buildLocalSpeechEvaluation } from '../utils/localEvaluate';
 
 interface QuickReflexChallengeProps {
   showPinyin: boolean;
@@ -127,12 +128,30 @@ export const QuickReflexChallenge: React.FC<QuickReflexChallengeProps> = ({
         }),
       });
 
-      const data = await response.json();
-      if (data.success) {
-        setEvaluation(data.evaluation);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setEvaluation(data.evaluation);
+          return;
+        }
       }
-    } catch (err) {
-      console.error(err);
+      setEvaluation(
+        buildLocalSpeechEvaluation(
+          userSpeech,
+          currentChallenge.hintChinese,
+          '',
+          currentChallenge.questionVietnamese
+        )
+      );
+    } catch {
+      setEvaluation(
+        buildLocalSpeechEvaluation(
+          userSpeech,
+          currentChallenge.hintChinese,
+          '',
+          currentChallenge.questionVietnamese
+        )
+      );
     } finally {
       setIsEvaluating(false);
     }

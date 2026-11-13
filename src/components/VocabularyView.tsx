@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { VOCABULARY_LIST, VocabularyItem, SentenceExample } from '../data/chineseData';
 import { speakChinese, stopSpeaking, ChineseSpeechRecognizer } from '../utils/speech';
+import { buildLocalSpeechEvaluation } from '../utils/localEvaluate';
 
 interface VocabularyViewProps {
   showPinyin: boolean;
@@ -122,15 +123,30 @@ export const VocabularyView: React.FC<VocabularyViewProps> = ({
         }),
       });
 
-      const data = await response.json();
-      if (data.success) {
-        setEvaluationResult(data.evaluation);
-      } else {
-        alert(data.error || 'Lỗi đánh giá');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setEvaluationResult(data.evaluation);
+          return;
+        }
       }
-    } catch (err) {
-      console.error('Error evaluating speech:', err);
-      alert('Không thể kết nối đến AI chấm điểm.');
+      setEvaluationResult(
+        buildLocalSpeechEvaluation(
+          userTranscript,
+          shadowingSentence.chinese,
+          shadowingSentence.pinyin,
+          shadowingSentence.vietnamese
+        )
+      );
+    } catch {
+      setEvaluationResult(
+        buildLocalSpeechEvaluation(
+          userTranscript,
+          shadowingSentence.chinese,
+          shadowingSentence.pinyin,
+          shadowingSentence.vietnamese
+        )
+      );
     } finally {
       setIsEvaluating(false);
     }
