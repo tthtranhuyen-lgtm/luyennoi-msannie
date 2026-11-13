@@ -23,8 +23,21 @@
           }
         } catch (e) {}
 
-        // Global error logger
+        function isViteHmrWebSocketError(errOrMsg) {
+          var msg = errOrMsg && errOrMsg.message ? String(errOrMsg.message) : String(errOrMsg || '');
+          var stack = errOrMsg && errOrMsg.stack ? String(errOrMsg.stack) : '';
+          return (
+            msg.indexOf('WebSocket closed without opened') !== -1 ||
+            (msg.indexOf('WebSocket') !== -1 && stack.indexOf('@vite/client') !== -1) ||
+            stack.indexOf('@vite/client') !== -1
+          );
+        }
+
+        // Global error logger (ignoring harmless Vite HMR WebSocket notices)
         window.addEventListener('error', function (e) {
+          if (isViteHmrWebSocketError(e.error || e.message)) {
+            return;
+          }
           console.error('[App Init Error]:', e.error || e.message);
           var box = document.getElementById('init-error-display');
           if (box) {
@@ -33,6 +46,10 @@
           }
         });
         window.addEventListener('unhandledrejection', function (e) {
+          if (isViteHmrWebSocketError(e.reason)) {
+            e.preventDefault();
+            return;
+          }
           console.error('[App Rejection]:', e.reason);
           var box = document.getElementById('init-error-display');
           if (box) {

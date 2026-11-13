@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import {
   StudentSubmission,
   getAllSubmissions,
+  hydrateSubmissionsFromIndexedDB,
   getSubmission as getSubFromStorage,
   saveSubmission as saveSubToStorage,
   updateTeacherReview as updateReviewInStorage,
@@ -43,19 +44,23 @@ interface AudioSubmissionsContextType {
 
 const AudioSubmissionsContext = createContext<AudioSubmissionsContextType | undefined>(undefined);
 
+function mapSubmissionsList(list: StudentSubmission[]): Record<string, StudentSubmission> {
+  const map: Record<string, StudentSubmission> = {};
+  list.forEach((sub) => {
+    if (sub && sub.questionId) {
+      map[sub.questionId] = sub;
+    }
+  });
+  return map;
+}
+
 export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [submissions, setSubmissions] = useState<Record<string, StudentSubmission>>({});
 
   const reloadSubmissions = () => {
     try {
       const list = getAllSubmissions();
-      const map: Record<string, StudentSubmission> = {};
-      list.forEach((sub) => {
-        if (sub && sub.questionId) {
-          map[sub.questionId] = sub;
-        }
-      });
-      setSubmissions(map);
+      setSubmissions(mapSubmissionsList(list));
     } catch (e) {
       console.warn('Lỗi nạp submissions:', e);
     }
@@ -63,6 +68,11 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
 
   useEffect(() => {
     reloadSubmissions();
+
+    // Hydrate full audio recordings from IndexedDB on startup
+    hydrateSubmissionsFromIndexedDB().then((list) => {
+      setSubmissions(mapSubmissionsList(list));
+    });
 
     const handleUpdate = () => {
       reloadSubmissions();
@@ -87,7 +97,7 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       studentName?: string;
     }
   ): StudentSubmission => {
-    const existing = submissions[questionId] || getSubFromStorage(questionId);
+    const existing = getSubFromStorage(questionId);
     const updated = saveSubToStorage(questionId, {
       scenarioId: meta.scenarioId,
       scenarioTitle: meta.scenarioTitle,
@@ -112,7 +122,8 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       questionText?: string;
     }
   ): StudentSubmission => {
-    const existing = submissions[questionId] || getSubFromStorage(questionId);
+    // Always read latest from storage to avoid stale closure overwriting audioDataUrl
+    const existing = getSubFromStorage(questionId);
     const updated = saveSubToStorage(questionId, {
       scenarioId: meta?.scenarioId || existing?.scenarioId || 1,
       scenarioTitle: meta?.scenarioTitle || existing?.scenarioTitle,

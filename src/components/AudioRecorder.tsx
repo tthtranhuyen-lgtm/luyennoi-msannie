@@ -8,6 +8,7 @@ import {
   AlertCircle,
   GraduationCap,
   Sparkles,
+  Loader2,
 } from 'lucide-react';
 import { audioRecorder, formatSafeTime } from '../utils/audioStorage';
 import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
@@ -35,9 +36,12 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const { getSubmission, saveAudioRecording, deleteSubmission } = useAudioSubmissions();
 
   const submission = getSubmission(questionId);
-  const audioDataUrl = submission?.audioDataUrl;
+  const [localAudioUrl, setLocalAudioUrl] = useState<string | undefined>(submission?.audioDataUrl);
+  const audioDataUrl = submission?.audioDataUrl || localAudioUrl;
 
   const [isRecording, setIsRecording] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [recordSeconds, setRecordSeconds] = useState(0);
   const [liveTranscript, setLiveTranscript] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -45,11 +49,22 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const timerRef = useRef<number | null>(null);
   const recognizerRef = useRef<ChineseSpeechRecognizer | null>(null);
   const currentTranscriptRef = useRef<string>('');
+  const isRecordingRef = useRef<boolean>(false);
+
+  // Sync local fallback URL with context submission (e.g. after IndexedDB hydration)
+  useEffect(() => {
+    if (submission?.audioDataUrl) {
+      setLocalAudioUrl(submission.audioDataUrl);
+    } else if (!submission && localAudioUrl) {
+      setLocalAudioUrl(undefined);
+    }
+  }, [submission?.audioDataUrl]);
 
   // Clean up timer & recognizer on unmount
   useEffect(() => {
     recognizerRef.current = new ChineseSpeechRecognizer();
     return () => {
+      isRecordingRef.current = false;
       if (timerRef.current) {
         window.clearInterval(timerRef.current);
       }
@@ -65,14 +80,23 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const getDownloadExtension = (dataUrl?: string) => {
+    if (!dataUrl) return 'webm';
+    if (dataUrl.startsWith('data:audio/mp4')) return 'm4a';
+    if (dataUrl.startsWith('data:audio/ogg')) return 'ogg';
+    return 'webm';
+  };
+
   const handleStartRecording = async () => {
     setErrorMessage(null);
+    setConfirmDelete(false);
     setLiveTranscript('');
     currentTranscriptRef.current = '';
 
     try {
       // 1. Start media audio recording (native webm/mp4 audio chunks)
       await audioRecorder.startRecording();
+      isRecordingRef.current = true;
       setIsRecording(true);
       setRecordSeconds(0);
 
@@ -86,6 +110,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
         recognizerRef.current.startListening(
           {
             onResult: (transcript) => {
+              if (!isRecordingRef.current) return;
               setLiveTranscript(transcript);
               currentTranscriptRef.current = transcript;
               // Notify parent so "Ghi chú / Nháp câu trả lời" updates in real time!
@@ -97,18 +122,21 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
               console.warn('Nhận dạng tiếng Trung:', err);
             },
           },
-          studentText // pass existing text if any to append or start fresh
+          studentText
         );
       }
     } catch (err: any) {
+      isRecordingRef.current = false;
       setIsRecording(false);
       setErrorMessage(
-        'Không thể truy cập microphone. Vui lòng cho phép quyền truy cập micro trên trình duyệt của bạn.'
+        err?.message ||
+          'Không thể truy cập microphone. Vui lòng cho phép quyền truy cập micro trên trình duyệt của bạn.'
       );
     }
   };
 
   const handleStopRecording = async () => {
+    isRecordingRef.current = false;
     if (timerRef.current) {
       window.clearInterval(timerRef.current);
       timerRef.current = null;
@@ -119,12 +147,14 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }
 
     setIsRecording(false);
+    setIsSaving(true);
 
     try {
       const { dataUrl } = await audioRecorder.stopRecording();
       const finalRecordedText = currentTranscriptRef.current || liveTranscript || studentText;
 
-      // Save directly into context & storage
+      // Immediately reflect audio in local state & persist in context + IndexedDB
+      setLocalAudioUrl(dataUrl);
       saveAudioRecording(questionId, dataUrl, {
         scenarioId,
         scenarioTitle,
@@ -132,16 +162,18 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
         studentText: finalRecordedText,
       });
 
-      // Ensure parent has the final transcript
       if (onTranscriptRecorded && finalRecordedText) {
         onTranscriptRecorded(finalRecordedText);
       }
     } catch (err: any) {
-      setErrorMessage('Lỗi lưu bản ghi âm: ' + (err.message || 'Không xác định'));
+      setErrorMessage('Lỗi lưu bản ghi âm: ' + (err?.message || 'Không xác định'));
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handleCancelRecording = () => {
+    isRecordingRef.current = false;
     if (timerRef.current) {
       window.clearInterval(timerRef.current);
       timerRef.current = null;
@@ -156,10 +188,10 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const handleDeleteAudio = () => {
-    if (confirm('Bạn có chắc muốn xóa bản ghi âm này để thu âm lại?')) {
-      deleteSubmission(questionId);
-      setLiveTranscript('');
-    }
+    deleteSubmission(questionId);
+    setLocalAudioUrl(undefined);
+    setLiveTranscript('');
+    setConfirmDelete(false);
   };
 
   return (
@@ -173,6 +205,8 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
             className={`w-2.5 h-2.5 rounded-full ${
               isRecording
                 ? 'bg-rose-500 animate-ping'
+                : isSaving
+                ? 'bg-amber-500 animate-pulse'
                 : audioDataUrl
                 ? 'bg-emerald-500'
                 : 'bg-slate-300'
@@ -181,13 +215,15 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
           <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
             {isRecording
               ? 'Đang ghi âm & Nhận dạng giọng nói...'
+              : isSaving
+              ? 'Đang lưu tệp ghi âm...'
               : audioDataUrl
               ? 'Bản ghi âm bài nói của bạn'
               : 'Ghi âm câu trả lời trực tiếp'}
           </span>
         </div>
 
-        {audioDataUrl && !isRecording && (
+        {audioDataUrl && !isRecording && !isSaving && (
           <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full">
             <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
             <span>Đã sẵn sàng cho giáo viên kiểm tra</span>
@@ -195,7 +231,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
         )}
       </div>
 
-      {/* Error alert if mic permission failed */}
+      {/* Error alert if mic permission or saving failed */}
       {errorMessage && (
         <div className="bg-rose-50 border border-rose-300 text-rose-800 rounded-xl p-3 text-xs flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
@@ -228,12 +264,14 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button
+                type="button"
                 onClick={handleCancelRecording}
                 className="px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-200/60 transition-colors"
               >
                 Hủy
               </button>
               <button
+                type="button"
                 onClick={handleStopRecording}
                 className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md shadow-rose-500/30 flex items-center gap-1.5 transition-all"
               >
@@ -250,16 +288,18 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Đang nghe được:</span>
               </div>
-              <p className="text-sm font-bold text-slate-900 leading-snug">
-                {liveTranscript}
-              </p>
+              <p className="text-sm font-bold text-slate-900 leading-snug">{liveTranscript}</p>
             </div>
           )}
+        </div>
+      ) : isSaving ? (
+        <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 flex items-center justify-center gap-2 text-xs font-bold text-blue-800">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+          <span>Đang xử lý &amp; lưu tệp ghi âm bài nói...</span>
         </div>
       ) : audioDataUrl ? (
         /* PLAYBACK STATE: NATIVE BROWSER AUDIO PLAYER */
         <div className="space-y-3 pt-1 animate-fade-in">
-          {/* Native HTML5 Audio Playback Component */}
           <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-200 space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-600">
               <span className="font-semibold text-slate-700">
@@ -270,7 +310,6 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
               </span>
             </div>
 
-            {/* Native browser audio element with full browser controls */}
             <audio
               controls
               src={audioDataUrl}
@@ -285,6 +324,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={handleStartRecording}
                 className="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 flex items-center gap-1.5 transition-colors shadow-2xs"
               >
@@ -294,7 +334,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
               <a
                 href={audioDataUrl}
-                download={`bai_noi_${questionId}.webm`}
+                download={`bai_noi_${questionId}.${getDownloadExtension(audioDataUrl)}`}
                 className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold border border-slate-200 flex items-center gap-1.5 transition-colors"
                 title="Tải tệp âm thanh ghi âm về máy tính/điện thoại"
               >
@@ -303,12 +343,32 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
               </a>
             </div>
 
-            <button
-              onClick={handleDeleteAudio}
-              className="text-[11px] text-slate-400 hover:text-rose-600 transition-colors"
-            >
-              Xóa bản ghi
-            </button>
+            {confirmDelete ? (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleDeleteAudio}
+                  className="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-[11px] font-bold hover:bg-rose-700"
+                >
+                  Xác nhận xóa
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmDelete(false)}
+                  className="text-[11px] text-slate-500 hover:text-slate-700 font-semibold"
+                >
+                  Hủy
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                className="text-[11px] text-slate-400 hover:text-rose-600 transition-colors"
+              >
+                Xóa bản ghi
+              </button>
+            )}
           </div>
 
           {/* Teacher feedback notice if teacher has already inspected & graded */}
@@ -340,6 +400,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
           </p>
 
           <button
+            type="button"
             onClick={handleStartRecording}
             className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold shadow-sm shadow-blue-500/20 flex items-center justify-center gap-2 transition-all shrink-0"
           >

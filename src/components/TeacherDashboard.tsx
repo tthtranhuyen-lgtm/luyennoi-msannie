@@ -17,12 +17,10 @@ import {
 } from 'lucide-react';
 import {
   StudentSubmission,
-  getAllSubmissions,
-  updateTeacherReview,
   saveSubmission,
-  clearSubmission,
   formatSafeTime,
 } from '../utils/audioStorage';
+import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
 import { CURRICULUM_SCENARIOS } from '../data/curriculumData';
 import { speakChinese } from '../utils/speech';
 
@@ -31,75 +29,29 @@ interface TeacherDashboardProps {
 }
 
 export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }) => {
-  const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
+  const {
+    allSubmissionsList: submissions,
+    gradeSubmission,
+    deleteSubmission,
+    reloadSubmissions,
+  } = useAudioSubmissions();
   const [selectedScenarioFilter, setSelectedScenarioFilter] = useState<number | 'all'>('all');
-  const [playingAudioKey, setPlayingAudioKey] = useState<string | null>(null);
-  const [audioInstances, setAudioInstances] = useState<Record<string, HTMLAudioElement>>({});
-  
+
   // Grade state per submission: { [questionId]: { score: number, feedback: string, saved: boolean } }
   const [gradingState, setGradingState] = useState<
     Record<string, { score: number; feedback: string; saved?: boolean }>
   >({});
 
-  const reloadSubmissions = () => {
-    const list = getAllSubmissions();
-    setSubmissions(list);
-
-    // Initialize local grading inputs
+  useEffect(() => {
     const initialGrading: Record<string, { score: number; feedback: string; saved?: boolean }> = {};
-    list.forEach((sub) => {
+    submissions.forEach((sub) => {
       initialGrading[sub.questionId] = {
         score: sub.teacherScore !== undefined ? sub.teacherScore : 9.0,
         feedback: sub.teacherFeedback || '',
       };
     });
     setGradingState((prev) => ({ ...initialGrading, ...prev }));
-  };
-
-  useEffect(() => {
-    reloadSubmissions();
-
-    const handleUpdate = () => {
-      reloadSubmissions();
-    };
-
-    window.addEventListener('hanyu-submissions-updated', handleUpdate);
-    return () => {
-      window.removeEventListener('hanyu-submissions-updated', handleUpdate);
-      // Stop any playing audio
-      Object.values(audioInstances).forEach((a) => {
-        a.pause();
-      });
-    };
-  }, []);
-
-  const togglePlayAudio = (qId: string, dataUrl: string) => {
-    if (playingAudioKey === qId) {
-      if (audioInstances[qId]) {
-        audioInstances[qId].pause();
-      }
-      setPlayingAudioKey(null);
-      return;
-    }
-
-    // Pause any other playing audio
-    Object.values(audioInstances).forEach((a) => a.pause());
-
-    let audio = audioInstances[qId];
-    if (!audio) {
-      audio = new Audio(dataUrl);
-      audio.onended = () => setPlayingAudioKey(null);
-      audio.onerror = () => {
-        setPlayingAudioKey(null);
-        alert('Không thể phát bản ghi này.');
-      };
-      setAudioInstances((prev) => ({ ...prev, [qId]: audio }));
-    }
-
-    audio.currentTime = 0;
-    audio.play();
-    setPlayingAudioKey(qId);
-  };
+  }, [submissions]);
 
   const handleScoreChange = (qId: string, score: number) => {
     setGradingState((prev) => ({
@@ -132,12 +84,11 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
 
   const handleSaveReview = (sub: StudentSubmission) => {
     const data = gradingState[sub.questionId] || { score: 9.0, feedback: '' };
-    updateTeacherReview(sub.questionId, data.score, data.feedback);
+    gradeSubmission(sub.questionId, data.score, data.feedback);
     setGradingState((prev) => ({
       ...prev,
       [sub.questionId]: { ...data, saved: true },
     }));
-    reloadSubmissions();
   };
 
   // Pre-seed demo submissions so teacher can test right away
@@ -323,12 +274,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
       ) : (
         <div className="space-y-5">
           {filteredSubmissions.map((sub, idx) => {
-            const isPlaying = playingAudioKey === sub.questionId;
             const currentGrade = gradingState[sub.questionId] || {
               score: sub.teacherScore !== undefined ? sub.teacherScore : 9.0,
               feedback: sub.teacherFeedback || '',
             };
-            const isSaved = currentGrade.saved || (sub.teacherScore !== undefined && !currentGrade.saved);
 
             return (
               <div
@@ -368,7 +317,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
                     )}
 
                     <button
-                      onClick={() => clearSubmission(sub.questionId)}
+                      onClick={() => deleteSubmission(sub.questionId)}
                       className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg transition-colors"
                       title="Xóa bài nộp này"
                     >
