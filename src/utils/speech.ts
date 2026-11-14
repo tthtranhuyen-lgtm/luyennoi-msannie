@@ -1,7 +1,22 @@
 // Speech synthesis and recognition utility for Chinese (zh-CN)
-// Synchronized with authentic native human Chinese speakers (zh-CN)
+// Synchronized with pre-generated natural Mandarin neural voice (zh-CN-XiaoxiaoNeural)
 
-// Search and prioritize authentic native human voices safely
+import { AUDIO_MANIFEST } from '../data/audioManifest';
+
+let currentAudio: HTMLAudioElement | null = null;
+let currentOnEnd: (() => void) | null = null;
+let currentObjectUrl: string | null = null;
+let playbackToken = 0;
+
+export function normalizeSpeechKey(text: string): string {
+  return String(text || '')
+    .replace(/\([^)]*[A-Za-zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ][^)]*\)/g, '')
+    .replace(/[()（）[\]【】]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// High-quality fallback check (strictly excludes robotic desktop voices like Microsoft Huihui)
 export function getNativeChineseVoice(): SpeechSynthesisVoice | null {
   try {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
@@ -9,7 +24,6 @@ export function getNativeChineseVoice(): SpeechSynthesisVoice | null {
     const voices = window.speechSynthesis.getVoices();
     if (!voices || voices.length === 0) return null;
 
-    // 1. Top tier: Natural/Neural native speaker voices (Microsoft & Google human voices)
     const topTier = voices.find(
       (v) =>
         v.lang &&
@@ -23,42 +37,102 @@ export function getNativeChineseVoice(): SpeechSynthesisVoice | null {
     );
     if (topTier) return topTier;
 
-    // 2. High tier: Apple native voices (Ting-Ting, Sin-ji)
     const appleVoice = voices.find(
       (v) =>
         v.lang &&
         v.lang.replace('_', '-').startsWith('zh') &&
         (v.name.includes('Ting-Ting') || v.name.includes('Sin-ji') || v.name.includes('Mei-Jia'))
     );
-    if (appleVoice) return appleVoice;
-
-    // 3. Any standard zh-CN voice
-    const zhCNVoice = voices.find((v) => v.lang && v.lang.replace('_', '-') === 'zh-CN');
-    if (zhCNVoice) return zhCNVoice;
-
-    // 4. Any Chinese voice
-    const anyChinese = voices.find((v) => v.lang && v.lang.replace('_', '-').startsWith('zh'));
-    return anyChinese || null;
-  } catch (e) {
+    return appleVoice || null;
+  } catch {
     return null;
   }
 }
 
 export function getNativeVoiceDisplayName(): string {
-  try {
-    const voice = getNativeChineseVoice();
-    if (!voice) return 'Giọng bản xứ Phổ Thông (zh-CN)';
-    if (voice.name.includes('Xiaoxiao')) return 'Giọng bản xứ Bắc Kinh (Xiaoxiao - Tự nhiên)';
-    if (voice.name.includes('Yunxi')) return 'Giọng bản xứ Bắc Kinh (Yunxi - Tự nhiên)';
-    if (voice.name.includes('Google 普通话')) return 'Giọng bản xứ Google 普通话 (Chuẩn)';
-    if (voice.name.includes('Ting-Ting')) return 'Giọng bản xứ Ting-Ting (Apple - Tự nhiên)';
-    return `Giọng bản xứ: ${voice.name}`;
-  } catch (e) {
-    return 'Giọng bản xứ Phổ Thông (zh-CN)';
+  return 'Giọng bản xứ Phổ Thông (Xiaoxiao - Tự nhiên)';
+}
+
+function cleanupCurrentAudio(): void {
+  if (currentAudio) {
+    try {
+      currentAudio.onended = null;
+      currentAudio.onerror = null;
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio.removeAttribute('src');
+    } catch {
+      // ignore
+    }
+    currentAudio = null;
+  }
+
+  if (currentObjectUrl) {
+    try {
+      URL.revokeObjectURL(currentObjectUrl);
+    } catch {
+      // ignore
+    }
+    currentObjectUrl = null;
   }
 }
 
-// 1. Text-to-Speech (TTS)
+function finishActivePlayback(token: number): void {
+  if (token !== playbackToken) return;
+  cleanupCurrentAudio();
+  const cb = currentOnEnd;
+  currentOnEnd = null;
+  if (cb) {
+    try {
+      cb();
+    } catch {
+      // ignore
+    }
+  }
+}
+
+function playAudioFromUrl(
+  url: string,
+  rate: number,
+  token: number,
+  isBlobUrl: boolean,
+  onStart?: () => void
+): void {
+  if (token !== playbackToken) {
+    if (isBlobUrl) URL.revokeObjectURL(url);
+    return;
+  }
+
+  cleanupCurrentAudio();
+
+  const audio = new Audio(url);
+  const clampedRate = Math.min(2.0, Math.max(0.5, rate || 0.9));
+  audio.playbackRate = clampedRate;
+  (audio as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true;
+
+  currentAudio = audio;
+  if (isBlobUrl) {
+    currentObjectUrl = url;
+  }
+
+  audio.onended = () => finishActivePlayback(token);
+  audio.onerror = () => finishActivePlayback(token);
+
+  if (onStart) {
+    try {
+      onStart();
+    } catch {
+      // ignore
+    }
+  }
+
+  audio.play().catch((err) => {
+    console.warn('Audio playback prevented or failed:', err);
+    finishActivePlayback(token);
+  });
+}
+
+// 1. Text-to-Speech (TTS) backed by unified XiaoxiaoNeural MP3 assets
 export function speakChinese(
   text: string,
   rate: number = 0.9,
@@ -66,33 +140,69 @@ export function speakChinese(
   onEnd?: () => void
 ): boolean {
   try {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      console.warn('Speech synthesis not supported in this browser');
+    if (typeof window === 'undefined') {
+      if (onEnd) onEnd();
       return false;
     }
 
-    window.speechSynthesis.cancel(); // Stop any ongoing speech
+    stopSpeaking();
 
-    const cleanText = text.replace(/[\(\)（）\[\]【】]/g, '').trim();
-    if (!cleanText) return false;
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'zh-CN';
-    utterance.rate = rate; // 0.85 - 1.0 for authentic natural cadence
-    utterance.pitch = 1.0; // Natural standard human pitch
-
-    const nativeVoice = getNativeChineseVoice();
-    if (nativeVoice) {
-      utterance.voice = nativeVoice;
+    const cleanText = normalizeSpeechKey(text);
+    if (!cleanText) {
+      if (onEnd) onEnd();
+      return false;
     }
 
-    if (onStart) utterance.onstart = onStart;
-    if (onEnd) utterance.onend = onEnd;
-    utterance.onerror = () => {
-      if (onEnd) onEnd();
-    };
+    const myToken = ++playbackToken;
+    currentOnEnd = onEnd || null;
 
-    window.speechSynthesis.speak(utterance);
+    // 1. Pre-generated XiaoxiaoNeural MP3 asset (works 100% offline & on GitHub Pages)
+    const assetUrl = AUDIO_MANIFEST[cleanText];
+    if (assetUrl) {
+      playAudioFromUrl(assetUrl, rate, myToken, false, onStart);
+      return true;
+    }
+
+    // 2. Dynamic text (e.g. live AI roleplay replies): fetch from /api/tts if server is running
+    fetch(`/api/tts?text=${encodeURIComponent(cleanText)}`)
+      .then(async (res) => {
+        if (myToken !== playbackToken) return;
+        const contentType = res.headers.get('content-type') || '';
+        if (!res.ok || !contentType.includes('audio')) {
+          throw new Error('Dynamic TTS endpoint unavailable');
+        }
+        const blob = await res.blob();
+        if (myToken !== playbackToken) return;
+        const blobUrl = URL.createObjectURL(blob);
+        playAudioFromUrl(blobUrl, rate, myToken, true, onStart);
+      })
+      .catch(() => {
+        if (myToken !== playbackToken) return;
+
+        // Only allow high-quality Neural/Apple browser voices as last resort for dynamic text
+        const qualityVoice = getNativeChineseVoice();
+        if (qualityVoice && 'speechSynthesis' in window) {
+          try {
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'zh-CN';
+            utterance.voice = qualityVoice;
+            utterance.rate = Math.min(2.0, Math.max(0.5, rate || 0.9));
+            utterance.pitch = 1.0;
+            utterance.onstart = () => {
+              if (myToken === playbackToken && onStart) onStart();
+            };
+            utterance.onend = () => finishActivePlayback(myToken);
+            utterance.onerror = () => finishActivePlayback(myToken);
+            window.speechSynthesis.speak(utterance);
+            return;
+          } catch {
+            // fall through
+          }
+        }
+
+        finishActivePlayback(myToken);
+      });
+
     return true;
   } catch (err) {
     console.warn('Error during speakChinese:', err);
@@ -102,12 +212,25 @@ export function speakChinese(
 }
 
 export function stopSpeaking(): void {
+  playbackToken += 1;
+  cleanupCurrentAudio();
+
   try {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
-  } catch (e) {
+  } catch {
     // ignore
+  }
+
+  const cb = currentOnEnd;
+  currentOnEnd = null;
+  if (cb) {
+    try {
+      cb();
+    } catch {
+      // ignore
+    }
   }
 }
 
@@ -215,6 +338,10 @@ export class ChineseSpeechRecognizer {
       this.isListening = false;
       listener.onError('Không thể khởi động micro: ' + (err.message || 'Lỗi không xác định'));
     }
+  }
+
+  public clearAccumulatedText(): void {
+    this.accumulatedText = '';
   }
 
   public stopListening(): void {

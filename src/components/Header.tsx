@@ -1,7 +1,8 @@
 import React from 'react';
-import { Plane, Languages, BookOpen, GraduationCap, Zap, Square, Volume2, Cloud } from 'lucide-react';
-import { stopSpeaking, getNativeVoiceDisplayName } from '../utils/speech';
+import { Plane, Languages, BookOpen, GraduationCap, Zap, Square } from 'lucide-react';
+import { stopSpeaking } from '../utils/speech';
 import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
+import { VOCABULARY_LIST } from '../data/chineseData';
 
 interface HeaderProps {
   activeTab: 'curriculum' | 'teacher' | 'vocabulary' | 'reflex';
@@ -24,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   speechRate,
   setSpeechRate,
 }) => {
-  const { cloudConnected, allSubmissionsList } = useAudioSubmissions();
+  const { allSubmissionsList } = useAudioSubmissions();
   const pendingCount = allSubmissionsList.filter((s) => s.teacherScore === undefined).length;
 
   return (
@@ -54,24 +55,6 @@ export const Header: React.FC<HeaderProps> = ({
           6 tình huống thực tế &bull; Quy trình 2 bước (Tự trả lời &amp; Thu âm → Đối chiếu đáp án) &bull;
           Nghe lại bài nói &bull; Giáo viên kiểm tra &amp; chấm điểm trực tiếp
         </p>
-
-        {/* Native Speaker Audio & Cloud Sync Status Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-3.5">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-400/30 text-[11px] text-blue-200 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <Volume2 className="w-3 h-3 text-sky-300" />
-            <span>Đồng bộ âm thanh: {getNativeVoiceDisplayName()}</span>
-          </div>
-
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-[11px] text-emerald-200 shadow-xs">
-            <Cloud className="w-3.5 h-3.5 text-emerald-300" />
-            <span className="font-semibold">
-              {cloudConnected
-                ? 'Đám mây sẵn sàng • Tự động gửi & nhận bài ghi âm'
-                : 'Đang kết nối máy chủ lưu bài ghi âm...'}
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Standalone Navigation & Controls Bar */}
@@ -128,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }`}
               >
                 <BookOpen className="w-4 h-4" />
-                <span>12 Từ Vựng &amp; 36 Mẫu Câu</span>
+                <span>{VOCABULARY_LIST.length} Từ Vựng &amp; {VOCABULARY_LIST.length * 3} Mẫu Câu</span>
               </button>
 
               <button

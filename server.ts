@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
+import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts';
 
 dotenv.config();
 
@@ -60,6 +61,69 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json());
+
+  // 0. Endpoint: Synchronized Natural Neural Mandarin TTS (zh-CN-XiaoxiaoNeural) for dynamic text
+  const ttsMemoryCache = new Map<string, Buffer>();
+  app.get('/api/tts', async (req, res) => {
+    const rawText = typeof req.query.text === 'string' ? req.query.text : '';
+    const cleanText = rawText
+      .replace(/\([^)]*[A-Za-zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ][^)]*\)/g, '')
+      .replace(/[()（）[\]【】]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 500);
+
+    if (!cleanText) {
+      return res.status(400).json({ error: 'Missing text parameter' });
+    }
+
+    const cached = ttsMemoryCache.get(cleanText);
+    if (cached) {
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return res.send(cached);
+    }
+
+    const tts = new MsEdgeTTS();
+    try {
+      await tts.setMetadata('zh-CN-XiaoxiaoNeural', OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+      const { audioStream } = tts.toStream(cleanText);
+      const chunks: Buffer[] = [];
+      await new Promise<void>((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('TTS timeout')), 12000);
+        audioStream.on('data', (c: Buffer) => chunks.push(c));
+        audioStream.on('end', () => {
+          clearTimeout(timer);
+          resolve();
+        });
+        audioStream.on('error', (err: Error) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+      });
+      const buf = Buffer.concat(chunks);
+      if (buf.length < 300) {
+        return res.status(502).json({ error: 'Empty TTS audio' });
+      }
+      if (ttsMemoryCache.size >= 200) {
+        const firstKey = ttsMemoryCache.keys().next().value;
+        if (firstKey) ttsMemoryCache.delete(firstKey);
+      }
+      ttsMemoryCache.set(cleanText, buf);
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return res.send(buf);
+    } catch (err: any) {
+      console.warn('TTS synthesis failed:', err?.message);
+      return res.status(500).json({ error: 'TTS failed' });
+    } finally {
+      try {
+        tts.close();
+      } catch {
+        // ignore
+      }
+    }
+  });
 
   // 1. Endpoint: Evaluate Spoken / Written Chinese sentence
   app.post('/api/evaluate-speech', async (req, res) => {

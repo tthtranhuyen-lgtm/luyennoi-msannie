@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Volume2,
   Square,
@@ -46,6 +46,8 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
   // Audio playing states for native speech
   const [activeSpeechId, setActiveSpeechId] = useState<string | null>(null);
   const [isPlayingAll, setIsPlayingAll] = useState<string | null>(null);
+  const playbackSessionRef = useRef(0);
+  const playAllTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Student notes state
   const [studentNotes, setStudentNotes] = useState<Record<string, string>>({});
@@ -58,7 +60,7 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
         const sub = getSubmission(q.noteKey);
         if (sub && sub.studentText) {
           initialNotes[q.noteKey] = sub.studentText;
-        } else {
+        } else if (!sub) {
           try {
             const local = localStorage.getItem('airport-notes-' + q.noteKey);
             if (local) initialNotes[q.noteKey] = local;
@@ -67,10 +69,25 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
           }
         }
       });
+
+      const fullKey = `dialogue-full-${sc.id}`;
+      const fullSub = getSubmission(fullKey);
+      if (fullSub && fullSub.studentText) {
+        initialNotes[fullKey] = fullSub.studentText;
+      } else if (!fullSub) {
+        try {
+          const local = localStorage.getItem('airport-notes-' + fullKey);
+          if (local) initialNotes[fullKey] = local;
+        } catch (e) {
+          // ignore
+        }
+      }
     });
     setStudentNotes(initialNotes);
 
     return () => {
+      playbackSessionRef.current += 1;
+      if (playAllTimerRef.current) clearTimeout(playAllTimerRef.current);
       stopSpeaking();
     };
   }, []);
@@ -78,7 +95,11 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
   const handleNoteChange = (q: Step1Question, scenario: CurriculumScenario, value: string) => {
     setStudentNotes((prev) => ({ ...prev, [q.noteKey]: value }));
     try {
-      localStorage.setItem('airport-notes-' + q.noteKey, value);
+      if (value === '') {
+        localStorage.removeItem('airport-notes-' + q.noteKey);
+      } else {
+        localStorage.setItem('airport-notes-' + q.noteKey, value);
+      }
     } catch (e) {
       // ignore
     }
@@ -89,7 +110,35 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
     });
   };
 
+  const handleFullDialogueNoteChange = (scenario: CurriculumScenario, value: string) => {
+    const fullKey = `dialogue-full-${scenario.id}`;
+    setStudentNotes((prev) => ({ ...prev, [fullKey]: value }));
+    try {
+      if (value === '') {
+        localStorage.removeItem('airport-notes-' + fullKey);
+      } else {
+        localStorage.setItem('airport-notes-' + fullKey, value);
+      }
+    } catch (e) {
+      // ignore
+    }
+    saveStudentText(fullKey, value, {
+      scenarioId: scenario.id,
+      scenarioTitle: scenario.title,
+      questionText: `Luyện nói trọn vẹn tình huống ${scenario.id}: ${scenario.title}`,
+    });
+  };
+
+  const clearPlayAllTimer = () => {
+    if (playAllTimerRef.current) {
+      clearTimeout(playAllTimerRef.current);
+      playAllTimerRef.current = null;
+    }
+  };
+
   const playSingle = (text: string, id: string) => {
+    playbackSessionRef.current += 1;
+    clearPlayAllTimer();
     if (activeSpeechId === id) {
       stopSpeaking();
       setActiveSpeechId(null);
@@ -108,6 +157,8 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
   };
 
   const playAllLines = (lines: string[], targetId: string) => {
+    playbackSessionRef.current += 1;
+    clearPlayAllTimer();
     if (isPlayingAll === targetId) {
       stopSpeaking();
       setIsPlayingAll(null);
@@ -116,9 +167,11 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
     }
     stopSpeaking();
     setIsPlayingAll(targetId);
+    const sessionId = playbackSessionRef.current;
 
     let currentIndex = 0;
     const playNext = () => {
+      if (playbackSessionRef.current !== sessionId) return;
       if (currentIndex >= lines.length) {
         setIsPlayingAll(null);
         setActiveSpeechId(null);
@@ -127,13 +180,16 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
       const text = lines[currentIndex];
       currentIndex++;
       speakChinese(text, speechRate, undefined, () => {
-        setTimeout(playNext, 400);
+        if (playbackSessionRef.current !== sessionId) return;
+        playAllTimerRef.current = setTimeout(playNext, 350);
       });
     };
     playNext();
   };
 
   const handleStopAll = () => {
+    playbackSessionRef.current += 1;
+    clearPlayAllTimer();
     stopSpeaking();
     setActiveSpeechId(null);
     setIsPlayingAll(null);
@@ -381,8 +437,9 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
                                 </span>
                                 {noteVal && (
                                   <button
+                                    type="button"
                                     onClick={() => handleNoteChange(q, sc, '')}
-                                    className="text-slate-400 hover:text-slate-600 flex items-center gap-1 text-[11px] font-normal"
+                                    className="text-slate-400 hover:text-slate-600 flex items-center gap-1 text-[11px] font-normal cursor-pointer"
                                   >
                                     <RotateCcw className="w-3 h-3" />
                                     <span>Xóa nội dung</span>
@@ -549,7 +606,7 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
                       <button
                         onClick={() =>
                           playAllLines(
-                            sc.fullDialogue.map((d) => `${d.speaker}: ${d.chinese}`),
+                            sc.fullDialogue.map((d) => d.chinese),
                             `dialogue-${sc.id}`
                           )
                         }
@@ -609,9 +666,19 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
                         <span>Thu âm thực hành trọn vẹn tình huống này:</span>
                       </div>
                       {studentNotes[`dialogue-full-${sc.id}`] && (
-                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 font-medium">
-                          <span className="font-bold text-slate-600 block mb-0.5">Nội dung ghi âm nhận dạng được:</span>
-                          {studentNotes[`dialogue-full-${sc.id}`]}
+                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 font-medium space-y-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-bold text-slate-600">Nội dung ghi âm nhận dạng được:</span>
+                            <button
+                              type="button"
+                              onClick={() => handleFullDialogueNoteChange(sc, '')}
+                              className="text-slate-400 hover:text-slate-600 flex items-center gap-1 text-[11px] font-normal cursor-pointer"
+                            >
+                              <RotateCcw className="w-3 h-3" />
+                              <span>Xóa nội dung</span>
+                            </button>
+                          </div>
+                          <div>{studentNotes[`dialogue-full-${sc.id}`]}</div>
                         </div>
                       )}
                       <AudioRecorder
@@ -621,7 +688,7 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
                         questionText={`Luyện nói trọn vẹn tình huống ${sc.id}: ${sc.title}`}
                         studentText={studentNotes[`dialogue-full-${sc.id}`] || ''}
                         onTranscriptRecorded={(transcript) => {
-                          setStudentNotes((prev) => ({ ...prev, [`dialogue-full-${sc.id}`]: transcript }));
+                          handleFullDialogueNoteChange(sc, transcript);
                         }}
                       />
                     </div>

@@ -31,7 +31,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
     gradeSubmission,
     deleteSubmission,
     reloadSubmissions,
-    cloudConnected,
     cloudError,
   } = useAudioSubmissions();
   const [selectedScenarioFilter, setSelectedScenarioFilter] = useState<number | 'all'>('all');
@@ -210,25 +209,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
         </div>
       </div>
 
-      {/* Teacher Cloud Sync Status Banner */}
-      <div className="rounded-2xl p-4 sm:p-5 border shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-emerald-50/90 border-emerald-200 text-emerald-900">
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-600 text-white">
-            <Cloud className="w-5 h-5" />
-          </div>
-          <div className="space-y-0.5 text-xs sm:text-sm">
-            <div className="font-bold text-emerald-950">
-              {cloudConnected
-                ? 'Đã kết nối Góc Giáo Viên Đám Mây (Không cần đăng nhập Google)'
-                : 'Đang kết nối tới máy chủ lưu bài ghi âm...'}
-            </div>
-            <p className="text-xs text-emerald-800">
-              Tự động nhận bài ghi âm từ học sinh ở mọi thiết bị theo thời gian thực ngay khi các em thu âm xong.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {cloudError && (
         <div className="rounded-2xl p-4 bg-rose-50 border border-rose-200 text-rose-900 flex items-start gap-2.5 text-xs">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
@@ -375,13 +355,15 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
                     <span className="font-bold text-slate-500 uppercase tracking-wider text-[10px]">
                       Câu hỏi tình huống:
                     </span>
-                    <button
-                      onClick={() => speakChinese(sub.questionText, speechRate)}
-                      className="text-blue-600 hover:text-blue-700 font-bold flex items-center gap-1 text-[11px]"
-                    >
-                      <Volume2 className="w-3.5 h-3.5" />
-                      <span>Nghe giọng bản xứ</span>
-                    </button>
+                    {/[\u4e00-\u9fa5]/.test(sub.questionText) && (
+                      <button
+                        onClick={() => speakChinese(sub.questionText, speechRate)}
+                        className="text-blue-600 hover:text-blue-700 font-bold flex items-center gap-1 text-[11px]"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>Nghe giọng bản xứ</span>
+                      </button>
+                    )}
                   </div>
                   <div className="text-sm font-bold text-slate-900">{sub.questionText}</div>
                 </div>

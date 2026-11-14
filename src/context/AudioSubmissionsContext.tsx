@@ -321,9 +321,13 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
           // Sync teacher grading/feedback back to this student's device state
           if (data.studentUid === myStudentId && item.questionId) {
             const localExisting = getSubFromStorage(item.questionId);
+            const localIsNewer =
+              localExisting && localExisting.timestamp && localExisting.timestamp > item.timestamp;
             const merged = saveSubToStorage(item.questionId, {
               ...localExisting,
               ...item,
+              studentText: localIsNewer ? localExisting.studentText : item.studentText,
+              timestamp: localIsNewer ? localExisting.timestamp : item.timestamp,
               audioDataUrl: item.audioDataUrl || localExisting?.audioDataUrl,
               syncedToCloud: true,
             });
@@ -391,6 +395,28 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     return updated;
   };
 
+  const textSyncTimersRef = useRef<Record<string, number>>({});
+
+  const syncStudentTextToFirestore = async (docId: string, studentText: string, ts: number) => {
+    const docPath = `submissions/${docId}`;
+    try {
+      const docRef = doc(db, 'submissions', docId);
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        await updateDoc(docRef, {
+          studentText: studentText.slice(0, 2000),
+          timestamp: Math.max(1, Math.floor(ts)),
+          updatedAt: serverTimestamp(),
+        });
+      }
+    } catch (err: any) {
+      const msg = err?.message || String(err);
+      if (msg.includes('permission') || msg.includes('PERMISSION_DENIED')) {
+        handleFirestoreError(err, OperationType.UPDATE, docPath);
+      }
+    }
+  };
+
   const saveStudentText = (
     questionId: string,
     studentText: string,
@@ -403,22 +429,40 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     const existing = getSubFromStorage(questionId);
     const effectiveName = resolveEffectiveStudentName(existing?.studentName);
     const uid = existing?.studentUid || localStudentIdRef.current;
+    const docId = existing?.id || `${sanitizeId(uid, 60)}_${sanitizeId(questionId, 64)}`.slice(0, 128);
+    const nowTs = Date.now();
 
     const updated = saveSubToStorage(questionId, {
-      id: existing?.id || `${sanitizeId(uid, 60)}_${sanitizeId(questionId, 64)}`.slice(0, 128),
+      id: docId,
       scenarioId: meta?.scenarioId || existing?.scenarioId || 1,
       scenarioTitle: meta?.scenarioTitle || existing?.scenarioTitle,
       questionId,
       questionText: meta?.questionText || existing?.questionText || '',
       studentText,
       audioDataUrl: existing?.audioDataUrl,
-      timestamp: Date.now(),
+      timestamp: nowTs,
       studentName: effectiveName,
       studentUid: uid,
       syncedToCloud: existing?.syncedToCloud,
     });
 
     setSubmissions((prev) => ({ ...prev, [questionId]: updated }));
+
+    if (textSyncTimersRef.current[questionId]) {
+      window.clearTimeout(textSyncTimersRef.current[questionId]);
+      delete textSyncTimersRef.current[questionId];
+    }
+
+    if (existing?.syncedToCloud || existing?.audioDataUrl) {
+      if (studentText === '') {
+        void syncStudentTextToFirestore(docId, '', nowTs);
+      } else {
+        textSyncTimersRef.current[questionId] = window.setTimeout(() => {
+          void syncStudentTextToFirestore(docId, studentText, nowTs);
+        }, 700);
+      }
+    }
+
     return updated;
   };
 

@@ -162,7 +162,7 @@ export const VocabularyView: React.FC<VocabularyViewProps> = ({
               Từ Vựng Cốt Lõi
             </span>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-              12 Từ Vựng &amp; 36 Mẫu Câu Thực Tế
+              {VOCABULARY_LIST.length} Từ Vựng &amp; {VOCABULARY_LIST.length * 3} Mẫu Câu Thực Tế
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-1">
@@ -188,7 +188,7 @@ export const VocabularyView: React.FC<VocabularyViewProps> = ({
         {/* Left Column: 12 Words list */}
         <div className="lg:col-span-4 space-y-2">
           <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 px-1">
-            Danh mục từ vựng ({filteredWords.length}/12)
+            Danh mục từ vựng ({filteredWords.length}/{VOCABULARY_LIST.length})
           </div>
           <div className="space-y-2 max-h-[640px] overflow-y-auto pr-1">
             {filteredWords.map((item) => {

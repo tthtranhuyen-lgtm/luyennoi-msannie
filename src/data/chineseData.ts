@@ -434,6 +434,390 @@ export const VOCABULARY_LIST: VocabularyItem[] = [
         breakdown: "入境目的 (mục đích nhập cảnh) | 如实回答 (trả lời thành thật) | 紧张 (lo lắng/căng thẳng)"
       }
     ]
+  },
+  {
+    id: 13,
+    word: "目的",
+    pinyin: "mùdì",
+    vietnamese: "Mục đích",
+    icon: "Target",
+    usageGuide: "Danh từ chỉ mục tiêu, mục đích (ví dụ mục đích nhập cảnh, mục đích chuyến đi). Thường đi với 来...的目的是... hoặc 目的明确.",
+    commonCollocations: ["入境目的 (mục đích nhập cảnh)", "旅游目的 (mục đích du lịch)", "达到目的 (đạt được mục đích)", "主要目的 (mục đích chính)"],
+    sentences: [
+      {
+        id: "13-1",
+        chinese: "请问您这次来中国的目的是什么？是旅游还是出差？",
+        pinyin: "Qǐngwèn nín zhè cì lái Zhōngguó de mùdì shì shénme? Shì lǚyóu háishì chūchāi?",
+        vietnamese: "Xin hỏi mục đích lần này quý vị đến Trung Quốc là gì? Là đi du lịch hay công tác?",
+        breakdown: "这次 (lần này) | 的目的是什么 (mục đích là gì) | 还是 (hay là)"
+      },
+      {
+        id: "13-2",
+        chinese: "我来上海的主要目的是拜访朋友，顺便在周边城市逛一逛。",
+        pinyin: "Wǒ lái Shànghǎi de zhǔyào mùdì shì bàifǎng péngyou, shùnbiàn zài zhōubiān chéngshì guàng yī guàng.",
+        vietnamese: "Mục đích chính tôi đến Thượng Hải là thăm bạn, tiện thể đi dạo các thành phố xung quanh.",
+        breakdown: "主要目的 (mục đích chính) | 拜访朋友 (thăm bạn) | 顺便 (tiện thể)"
+      },
+      {
+        id: "13-3",
+        chinese: "填写入境卡的时候，要清楚地写明自己的入境目的和住宿地址。",
+        pinyin: "Tiánxiě rùjìngkǎ de shíhou, yào qīngchu de xiěmíng zìjǐ de rùjìng mùdì hé zhùsù dìzhǐ.",
+        vietnamese: "Khi điền tờ khai nhập cảnh, cần ghi rõ mục đích nhập cảnh và địa chỉ lưu trú của mình.",
+        breakdown: "填写 (điền vào) | 写明 (viết rõ) | 住宿地址 (địa chỉ chỗ ở)"
+      }
+    ]
+  },
+  {
+    id: 14,
+    word: "旅游",
+    pinyin: "lǚyóu",
+    vietnamese: "Du lịch",
+    icon: "Map",
+    usageGuide: "Động từ / danh từ chỉ việc đi du lịch. Hay dùng 去...旅游 (đi đâu du lịch), 旅游签证 (visa du lịch).",
+    commonCollocations: ["去中国旅游 (đi Trung Quốc du lịch)", "旅游签证 (visa du lịch)", "自助旅游 (du lịch tự túc)", "旅游旺季 (mùa cao điểm du lịch)"],
+    sentences: [
+      {
+        id: "14-1",
+        chinese: "我是来旅游的，打算在北京和上海玩一个星期左右。",
+        pinyin: "Wǒ shì lái lǚyóu de, dǎsuàn zài Běijīng hé Shànghǎi wán yī gè xīngqī zuǒyòu.",
+        vietnamese: "Tôi đến để du lịch, dự định chơi ở Bắc Kinh và Thượng Hải khoảng một tuần.",
+        breakdown: "是...的 (nhấn mạnh mục đích) | 打算 (dự định) | 左右 (khoảng chừng)"
+      },
+      {
+        id: "14-2",
+        chinese: "现在正好是旅游旺季，所以机场里的人特别多，办手续要排队。",
+        pinyin: "Xiànzài zhènghǎo shì lǚyóu wàngjì, suǒyǐ jīchǎng lǐ de rén tèbié duō, bàn shǒuxù yào páiduì.",
+        vietnamese: "Hiện tại đúng vào mùa du lịch cao điểm, nên trong sân bay người đặc biệt đông, làm thủ tục phải xếp hàng.",
+        breakdown: "正好 (đúng lúc) | 旅游旺季 (mùa cao điểm du lịch) | 排队 (xếp hàng)"
+      },
+      {
+        id: "14-3",
+        chinese: "出国旅游以前，别忘了提前订好回程机票和酒店。",
+        pinyin: "Chūguó lǚyóu yǐqián, bié wàngle tíqián dìng hǎo huíchéng jīpiào hé jiǔdiàn.",
+        vietnamese: "Trước khi đi du lịch nước ngoài, đừng quên đặt trước vé máy bay khứ hồi và khách sạn.",
+        breakdown: "出国 (ra nước ngoài) | 别忘了 (đừng quên) | 提前 (trước)"
+      }
+    ]
+  },
+  {
+    id: 15,
+    word: "拜访朋友",
+    pinyin: "bàifǎng péngyou",
+    vietnamese: "Thăm bạn",
+    icon: "Users",
+    usageGuide: "Cụm động-tân trang trọng hơn 看朋友, hay dùng khi trả lời hải quan hoặc nói lịch sự về việc đến thăm bạn bè, đối tác.",
+    commonCollocations: ["去拜访朋友 (đi thăm bạn)", "拜访老朋友 (thăm bạn cũ)", "来北京拜访朋友 (đến Bắc Kinh thăm bạn)"],
+    sentences: [
+      {
+        id: "15-1",
+        chinese: "我这次来中国主要是为了拜访朋友，顺便体验一下当地的美食。",
+        pinyin: "Wǒ zhè cì lái Zhōngguó zhǔyào shì wèile bàifǎng péngyou, shùnbiàn tǐyàn yīxià dāngdì de měishí.",
+        vietnamese: "Lần này tôi đến Trung Quốc chủ yếu là để thăm bạn, tiện thể trải nghiệm ẩm thực địa phương.",
+        breakdown: "主要是为了 (chủ yếu là để) | 当地 (địa phương) | 美食 (món ngon)"
+      },
+      {
+        id: "15-2",
+        chinese: "明天上午我要去拜访朋友，所以得早点儿打出租车过去。",
+        pinyin: "Míngtiān shàngwǔ wǒ yào qù bàifǎng péngyou, suǒyǐ děi zǎodiǎnr dǎ chūzūchē guòqù.",
+        vietnamese: "Sáng mai tôi phải đi thăm bạn, nên phải bắt taxi qua đó sớm một chút.",
+        breakdown: "早点儿 (sớm một chút) | 打出租车 (bắt xe taxi) | 过去 (sang đó)"
+      },
+      {
+        id: "15-3",
+        chinese: "在机场免税店买点儿礼物带给朋友吧，明天拜访朋友的时候正好送给他。",
+        pinyin: "Zài jīchǎng miǎnshuìdiàn mǎi diǎnr lǐwù dài gěi péngyou ba, míngtiān bàifǎng péngyou de shíhou zhènghǎo sòng gěi tā.",
+        vietnamese: "Mua chút quà ở cửa hàng miễn thuế sân bay mang cho bạn đi, mai lúc đến thăm bạn tặng luôn cho bạn ấy.",
+        breakdown: "免税店 (cửa hàng miễn thuế) | 礼物 (quà tặng) | 送给 (tặng cho)"
+      }
+    ]
+  },
+  {
+    id: 16,
+    word: "看朋友",
+    pinyin: "kàn péngyou",
+    vietnamese: "Thăm bạn",
+    icon: "HeartHandshake",
+    usageGuide: "Cách nói khẩu ngữ tự nhiên, thân mật mang nghĩa thăm hỏi bạn bè (看 mang nghĩa 探望 thăm nom).",
+    commonCollocations: ["去看朋友 (đi thăm bạn)", "顺便看朋友 (tiện thể thăm bạn)", "来上海看朋友 (đến Thượng Hải thăm bạn)"],
+    sentences: [
+      {
+        id: "16-1",
+        chinese: "我周末坐飞机去广州看朋友，我们在那边待几天就回来。",
+        pinyin: "Wǒ zhōumò zuò fēijī qù Guǎngzhōu kàn péngyou, wǒmen zài nàbiān dāi jǐ tiān jiù huílái.",
+        vietnamese: "Cuối tuần tôi đi máy bay đến Quảng Châu thăm bạn, chúng tôi ở bên đó mấy ngày rồi về.",
+        breakdown: "坐飞机 (đi máy bay) | 待几天 (ở mấy ngày) | 就回来 (rồi quay về)"
+      },
+      {
+        id: "16-2",
+        chinese: "下了飞机以后，我先去酒店放行李，晚上再去学校看朋友。",
+        pinyin: "Xiàle fēijī yǐhòu, wǒ xiān qù jiǔdiàn fàng xínglǐ, wǎnshang zài qù xuéxiào kàn péngyou.",
+        vietnamese: "Sau khi xuống máy bay, tôi về khách sạn cất hành lý trước, buổi tối mới đến trường thăm bạn.",
+        breakdown: "先...再... (trước... sau mới...) | 放行李 (cất hành lý)"
+      },
+      {
+        id: "16-3",
+        chinese: "你已经好久没看朋友了吧？趁着这次假期一起聚一聚。",
+        pinyin: "Nǐ yǐjīng hǎojiǔ méi kàn péngyou le ba? Chènzhe zhè cì jiàqī yīqǐ jù yī jù.",
+        vietnamese: "Bạn đã lâu lắm không thăm bạn rồi nhỉ? Nhân kỳ nghỉ lần này tụ họp với nhau một bữa đi.",
+        breakdown: "好久没...了 (lâu rồi chưa...) | 趁着 (nhân dịp) | 聚一聚 (tụ họp)"
+      }
+    ]
+  },
+  {
+    id: 17,
+    word: "住",
+    pinyin: "zhù",
+    vietnamese: "Ở",
+    icon: "Home",
+    usageGuide: "Động từ chỉ nơi cư trú, lưu trú (thường dùng với bổ ngữ kết quả 在: 住在 + địa điểm/khách sạn).",
+    commonCollocations: ["住在酒店 (ở khách sạn)", "住几天 (ở mấy ngày)", "住在哪里 (ở đâu)", "住朋友家 (ở nhà bạn)"],
+    sentences: [
+      {
+        id: "17-1",
+        chinese: "请问您在中国期间住在哪里？请提供一下酒店的名称和地址。",
+        pinyin: "Qǐngwèn nín zài Zhōngguó qījiān zhù zài nǎlǐ? Qǐng tígōng yīxià jiǔdiàn de míngchēng hé dìzhǐ.",
+        vietnamese: "Xin hỏi trong thời gian ở Trung Quốc quý vị ở đâu? Vui lòng cung cấp tên và địa chỉ khách sạn.",
+        breakdown: "期间 (trong thời gian) | 住在 (ở tại) | 提供 (cung cấp)"
+      },
+      {
+        id: "17-2",
+        chinese: "因为机场离市中心比较远，所以我打算第一晚住在机场附近的酒店。",
+        pinyin: "Yīnwèi jīchǎng lí shìzhōngxīn bǐjiào yuǎn, suǒyǐ wǒ dǎsuàn dì yī wǎn zhù zài jīchǎng fùjìn de jiǔdiàn.",
+        vietnamese: "Vì sân bay cách trung tâm thành phố khá xa, nên đêm đầu tiên tôi định ở khách sạn gần sân bay.",
+        breakdown: "市中心 (trung tâm thành phố) | 第一晚 (đêm đầu tiên) | 附近 (gần/lân cận)"
+      },
+      {
+        id: "17-3",
+        chinese: "我这次来杭州住五天，前三天住在酒店，后两天住在我朋友家。",
+        pinyin: "Wǒ zhè cì lái Hángzhōu zhù wǔ tiān, qián sān tiān zhù zài jiǔdiàn, hòu liǎng tiān zhù zài wǒ péngyou jiā.",
+        vietnamese: "Lần này tôi đến Hàng Châu ở 5 ngày, 3 ngày đầu ở khách sạn, 2 ngày sau ở nhà bạn tôi.",
+        breakdown: "前三天 (ba ngày đầu) | 后两天 (hai ngày sau)"
+      }
+    ]
+  },
+  {
+    id: 18,
+    word: "酒店",
+    pinyin: "jiǔdiàn",
+    vietnamese: "Khách sạn",
+    icon: "Building2",
+    usageGuide: "Danh từ chỉ khách sạn (lượng từ 家 jiā). Hay đi với 订 (đặt), 住 (ở), 退房 (trả phòng).",
+    commonCollocations: ["订酒店 (đặt khách sạn)", "住在酒店 (ở tại khách sạn)", "酒店地址 (địa chỉ khách sạn)", "机场酒店 (khách sạn sân bay)"],
+    sentences: [
+      {
+        id: "18-1",
+        chinese: "师傅，麻烦送我去这家酒店，地址在我的手机屏幕上。",
+        pinyin: "Shīfu, máfan sòng wǒ qù zhè jiā jiǔdiàn, dìzhǐ zài wǒ de shǒujī píngmù shang.",
+        vietnamese: "Bác tài ơi, phiền chở tôi đến khách sạn này, địa chỉ ở trên màn hình điện thoại của tôi.",
+        breakdown: "师傅 (bác tài/thợ) | 麻烦 (làm phiền) | 这家酒店 (khách sạn này)"
+      },
+      {
+        id: "18-2",
+        chinese: "如果你的行李明天才能送到，我们可以帮你直接寄到你住的酒店。",
+        pinyin: "Rúguǒ nín de xínglǐ míngtiān cái néng sòngdào, wǒmen kěyǐ bāng nín zhíjiē jì dào nín zhù de jiǔdiàn.",
+        vietnamese: "Nếu hành lý của quý khách ngày mai mới đến nơi, chúng tôi có thể gửi thẳng tới khách sạn quý khách ở.",
+        breakdown: "直接 (trực tiếp) | 寄到 (gửi tới)"
+      },
+      {
+        id: "18-3",
+        chinese: "我提前在网上订了一家离地铁站很近的酒店，去机场也很方便。",
+        pinyin: "Wǒ tíqián zài wǎngshang dìngle yī jiā lí dìtiězhàn hěn jìn de jiǔdiàn, qù jīchǎng yě hěn fāngbiàn.",
+        vietnamese: "Tôi đặt trước trên mạng một khách sạn rất gần ga tàu điện ngầm, đi sân bay cũng rất tiện.",
+        breakdown: "地铁站 (ga tàu điện ngầm) | 很近 (rất gần) | 方便 (tiện lợi)"
+      }
+    ]
+  },
+  {
+    id: 19,
+    word: "几天",
+    pinyin: "jǐ tiān",
+    vietnamese: "Mấy ngày",
+    icon: "CalendarDays",
+    usageGuide: "Dùng để hỏi số ngày ngắn (thường dưới 10 ngày) hoặc nói ước lượng 'vài ngày'.",
+    commonCollocations: ["住几天 (ở mấy ngày)", "待几天 (nán lại mấy ngày)", "玩几天 (chơi mấy ngày)", "过几天 (mấy ngày nữa)"],
+    sentences: [
+      {
+        id: "19-1",
+        chinese: "请问您打算在中国待几天？您的回程机票是哪一天的？",
+        pinyin: "Qǐngwèn nín dǎsuàn zài Zhōngguó dāi jǐ tiān? Nín de huíchéng jīpiào shì nǎ yī tiān de?",
+        vietnamese: "Xin hỏi quý vị dự định ở Trung Quốc mấy ngày? Vé máy bay khứ hồi của quý vị là ngày nào?",
+        breakdown: "待几天 (ở lại mấy ngày) | 哪一天 (ngày nào)"
+      },
+      {
+        id: "19-2",
+        chinese: "我只在这里住几天，下周二早上还要赶早班飞机回国呢。",
+        pinyin: "Wǒ zhǐ zài zhèlǐ zhù jǐ tiān, xià zhōu'èr zǎoshang hái yào gǎn zǎobān fēijī huíguó ne.",
+        vietnamese: "Tôi chỉ ở đây mấy ngày thôi, sáng thứ Ba tuần sau còn phải kịp chuyến bay sớm về nước nữa.",
+        breakdown: "赶早班飞机 (kịp chuyến bay sáng sớm) | 回国 (về nước)"
+      },
+      {
+        id: "19-3",
+        chinese: "过几天我朋友也要来北京旅游，到时候我们可以一起去爬长城。",
+        pinyin: "Guò jǐ tiān wǒ péngyou yě yào lái Běijīng lǚyóu, dào shíhou wǒmen kěyǐ yīqǐ qù pá Chángchéng.",
+        vietnamese: "Mấy ngày nữa bạn tôi cũng đến Bắc Kinh du lịch, đến lúc đó chúng tôi có thể cùng đi leo Vạn Lý Trường Thành.",
+        breakdown: "过几天 (mấy ngày nữa) | 到时候 (đến lúc đó) | 爬长城 (leo Trường Thành)"
+      }
+    ]
+  },
+  {
+    id: 20,
+    word: "出租车",
+    pinyin: "chūzūchē",
+    vietnamese: "Taxi",
+    icon: "Car",
+    usageGuide: "Xe taxi (lượng từ 辆 liàng). Hay dùng 坐出租车 (đi taxi) hoặc 打出租车 / 打车 (bắt taxi).",
+    commonCollocations: ["坐出租车 (đi xe taxi)", "打出租车 (bắt taxi)", "出租车乘车点 (điểm đón taxi)", "出租车司机 (tài xế taxi)"],
+    sentences: [
+      {
+        id: "20-1",
+        chinese: "出了到达大厅以后，沿着指示牌一直走就能看到出租车排队的地方。",
+        pinyin: "Chūle dàodá dàtīng yǐhòu, yánzhe zhǐshìpái yīzhí zǒu jiù néng kàndào chūzūchē páiduì de dìfang.",
+        vietnamese: "Sau khi ra khỏi sảnh đến, đi thẳng theo biển chỉ dẫn là có thể thấy chỗ xe taxi xếp hàng.",
+        breakdown: "到达大厅 (sảnh đến) | 沿着 (dọc theo) | 一直走 (đi thẳng)"
+      },
+      {
+        id: "20-2",
+        chinese: "因为我的行李很多，坐地铁不太方便，所以我决定直接坐出租车去酒店。",
+        pinyin: "Yīnwèi wǒ de xínglǐ hěn duō, zuò dìtiě bù tài fāngbiàn, suǒyǐ wǒ juédìng zhíjiē zuò chūzūchē qù jiǔdiàn.",
+        vietnamese: "Vì hành lý của tôi rất nhiều, đi tàu điện ngầm không tiện lắm, nên tôi quyết định đi thẳng taxi về khách sạn.",
+        breakdown: "坐地铁 (đi tàu điện ngầm) | 决定 (quyết định)"
+      },
+      {
+        id: "20-3",
+        chinese: "从首都机场坐出租车到市中心大概需要一个小时，还要看路上堵不堵车。",
+        pinyin: "Cóng Shǒudū Jīchǎng zuò chūzūchē dào shìzhōngxīn dàgài xūyào yī gè xiǎoshí, hái yào kàn lùshang dǔ bu dǔchē.",
+        vietnamese: "Đi taxi từ sân bay Thủ Đô vào trung tâm thành phố mất khoảng một tiếng, còn tùy trên đường có tắc xe không.",
+        breakdown: "大概 (khoảng chừng) | 堵车 (tắc đường)"
+      }
+    ]
+  },
+  {
+    id: 21,
+    word: "地址",
+    pinyin: "dìzhǐ",
+    vietnamese: "Địa chỉ",
+    icon: "MapPin",
+    usageGuide: "Danh từ chỉ địa chỉ nhà, khách sạn, nơi nhận hành lý. Hay đi với 写 (viết), 留 (để lại), 看 (xem), 记 (nhớ).",
+    commonCollocations: ["酒店地址 (địa chỉ khách sạn)", "留地址 (để lại địa chỉ)", "填写地址 (điền địa chỉ)", "具体地址 (địa chỉ cụ thể)"],
+    sentences: [
+      {
+        id: "21-1",
+        chinese: "请在这里留下您的酒店地址和联系电话，行李一找到我们就送过去。",
+        pinyin: "Qǐng zài zhèlǐ liúxià nín de jiǔdiàn dìzhǐ hé liánxì diànhuà, xínglǐ yī zhǎodào wǒmen jiù sòng guòqù.",
+        vietnamese: "Vui lòng để lại địa chỉ khách sạn và số điện thoại liên hệ tại đây, tìm thấy hành lý là chúng tôi gửi qua ngay.",
+        breakdown: "留下 (để lại) | 联系电话 (số điện thoại liên hệ) | 一...就... (hễ... là...)"
+      },
+      {
+        id: "21-2",
+        chinese: "上出租车以前，最好把酒店的中文地址提前截屏保存在手机里。",
+        pinyin: "Shàng chūzūchē yǐqián, zuì hǎo bǎ jiǔdiàn de Zhōngwén dìzhǐ tíqián jiépíng bǎocún zài shǒujī lǐ.",
+        vietnamese: "Trước khi lên taxi, tốt nhất hãy chụp màn hình địa chỉ tiếng Trung của khách sạn lưu sẵn trong điện thoại.",
+        breakdown: "中文地址 (địa chỉ tiếng Trung) | 截屏 (chụp màn hình) | 保存 (lưu lại)"
+      },
+      {
+        id: "21-3",
+        chinese: "不好意思，我看不太清楚这个地址，您可以把字放大一点儿吗？",
+        pinyin: "Bù hǎoyìsi, wǒ kàn bù tài qīngchu zhège dìzhǐ, nín kěyǐ bǎ zì fàngdà yīdiǎnr ma?",
+        vietnamese: "Xin lỗi, tôi nhìn không rõ địa chỉ này lắm, quý khách có thể phóng to chữ lên một chút được không?",
+        breakdown: "看不清楚 (nhìn không rõ) | 放大 (phóng to)"
+      }
+    ]
+  },
+  {
+    id: 22,
+    word: "多少钱",
+    pinyin: "duōshao qián",
+    vietnamese: "Bao nhiêu tiền",
+    icon: "Coins",
+    usageGuide: "Cụm từ hỏi giá tiền phổ biến nhất. Thường dùng 一共多少钱 (tổng cộng bao nhiêu tiền), 大概要多少钱 (khoảng bao nhiêu tiền).",
+    commonCollocations: ["一共多少钱 (tổng cộng bao nhiêu tiền)", "大概多少钱 (khoảng bao nhiêu tiền)", "超重一公斤多少钱 (quá cân 1kg bao nhiêu tiền)"],
+    sentences: [
+      {
+        id: "22-1",
+        chinese: "师傅，从机场到这家酒店坐出租车大概需要多少钱？",
+        pinyin: "Shīfu, cóng jīchǎng dào zhè jiā jiǔdiàn zuò chūzūchē dàgài xūyào duōshao qián?",
+        vietnamese: "Bác tài ơi, đi taxi từ sân bay đến khách sạn này mất khoảng bao nhiêu tiền?",
+        breakdown: "从...到... (từ... đến...) | 大概需要 (khoảng cần)"
+      },
+      {
+        id: "22-2",
+        chinese: "请问行李超重一公斤要补多少钱？我可以用微信支付吗？",
+        pinyin: "Qǐngwèn xínglǐ chāozhòng yī gōngjīn yào bǔ duōshao qián? Wǒ kěyǐ yòng Wēixìn zhīfù ma?",
+        vietnamese: "Cho hỏi hành lý quá cân 1 kg phải bù bao nhiêu tiền? Tôi có thể thanh toán bằng WeChat Pay không?",
+        breakdown: "补多少钱 (bù bao nhiêu tiền) | 微信支付 (thanh toán WeChat)"
+      },
+      {
+        id: "22-3",
+        chinese: "到了目的地以后，我问司机一共多少钱，顺便要了一张发票。",
+        pinyin: "Dàole mùdìdì yǐhòu, wǒ wèn sījī yīgòng duōshao qián, shùnbiàn yàole yī zhāng fāpiào.",
+        vietnamese: "Sau khi đến nơi, tôi hỏi tài xế tổng cộng bao nhiêu tiền, tiện thể xin một tờ hóa đơn.",
+        breakdown: "一共 (tổng cộng) | 司机 (tài xế) | 发票 (hóa đơn)"
+      }
+    ]
+  },
+  {
+    id: 23,
+    word: "打表",
+    pinyin: "dǎbiǎo",
+    vietnamese: "Bật đồng hồ tính tiền",
+    icon: "Gauge",
+    usageGuide: "Động từ ly hợp dùng khi đi taxi ở Trung Quốc, nhắc tài xế chạy theo đồng hồ tính cước thay vì mặc cả giá trọn gói.",
+    commonCollocations: ["按打表收费 (tính tiền theo đồng hồ)", "麻烦打表 (phiền bật đồng hồ)", "不打表 (không bật đồng hồ)"],
+    sentences: [
+      {
+        id: "23-1",
+        chinese: "师傅，麻烦您打表吧，我们按计价器上的金额付款。",
+        pinyin: "Shīfu, máfan nín dǎbiǎo ba, wǒmen àn jìjiàqì shang de jīn'é fùkuǎn.",
+        vietnamese: "Bác tài ơi, phiền bác bật đồng hồ tính tiền nhé, chúng tôi trả theo số tiền trên đồng hồ.",
+        breakdown: "按...付款 (trả tiền theo...) | 计价器 (đồng hồ tính cước) | 金额 (số tiền)"
+      },
+      {
+        id: "23-2",
+        chinese: "在机场上正规出租车的时候，一定要先确认司机打表再出发。",
+        pinyin: "Zài jīchǎng shàng zhèngguī chūzūchē de shíhou, yīdìng yào xiān quèrèn sījī dǎbiǎo zài chūfā.",
+        vietnamese: "Khi lên taxi chính quy ở sân bay, nhất định phải xác nhận tài xế bật đồng hồ rồi mới xuất phát.",
+        breakdown: "正规 (chính quy) | 确认 (xác nhận) | 再出发 (rồi mới xuất phát)"
+      },
+      {
+        id: "23-3",
+        chinese: "这个司机不肯打表，非要一口价两百块，我们还是换下一辆车吧。",
+        pinyin: "Zhège sījī bù kěn dǎbiǎo, fēiyào yīkǒujià liǎngbǎi kuài, wǒmen háishì huàn xià yī liàng chē ba.",
+        vietnamese: "Tài xế này không chịu bật đồng hồ, cứ đòi giá chốt 200 tệ, chúng ta đổi sang chiếc xe tiếp theo đi.",
+        breakdown: "不肯 (không chịu) | 一口价 (giá chốt không mặc cả) | 换车 (đổi xe)"
+      }
+    ]
+  },
+  {
+    id: 24,
+    word: "停",
+    pinyin: "tíng",
+    vietnamese: "Dừng lại",
+    icon: "OctagonPause",
+    usageGuide: "Động từ chỉ việc dừng xe, đỗ lại. Hay dùng với bổ ngữ 在 / 一下: 停在门口 (dừng ở cổng), 停一下 (dừng một chút), 停车 (đỗ/dừng xe).",
+    commonCollocations: ["停在这里 (dừng ở đây)", "停一下 (dừng lại một chút)", "在门口停 (dừng ở cửa)", "禁止停车 (cấm đỗ xe)"],
+    sentences: [
+      {
+        id: "24-1",
+        chinese: "师傅，前面就是酒店的大门了，麻烦您在路边停一下。",
+        pinyin: "Shīfu, qiánmiàn jiùshì jiǔdiàn de dàmén le, máfan nín zài lùbiān tíng yīxià.",
+        vietnamese: "Bác tài ơi, phía trước chính là cổng chính khách sạn rồi, phiền bác dừng lại ở bên đường một chút.",
+        breakdown: "大门 (cổng chính) | 路边 (bên đường) | 停一下 (dừng lại một chút)"
+      },
+      {
+        id: "24-2",
+        chinese: "这辆机场大巴只在这里停五分钟，大家拿好行李赶紧上车吧。",
+        pinyin: "Zhè liàng jīchǎng dàbā zhǐ zài zhèlǐ tíng wǔ fēnzhōng, dàjiā ná hǎo xínglǐ gǎnjǐn shàngchē ba.",
+        vietnamese: "Xe buýt sân bay này chỉ dừng ở đây 5 phút, mọi người cầm chắc hành lý rồi mau lên xe đi.",
+        breakdown: "机场大巴 (xe buýt sân bay) | 停五分钟 (dừng 5 phút) | 上车 (lên xe)"
+      },
+      {
+        id: "24-3",
+        chinese: "航站楼门口不能长时间停车，送完人以后司机必须马上开走。",
+        pinyin: "Hángzhànlóu ménkǒu bù néng cháng shíjiān tíngchē, sòng wán rén yǐhòu sījī bìxū mǎshàng kāizǒu.",
+        vietnamese: "Cửa nhà ga sân bay không được dừng đỗ xe lâu, sau khi thả người xong tài xế phải lái đi ngay.",
+        breakdown: "航站楼 (nhà ga sân bay) | 长时间 (thời gian dài) | 开走 (lái xe đi)"
+      }
+    ]
   }
 ];
 

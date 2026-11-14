@@ -69,6 +69,17 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }
   }, [submission?.audioDataUrl]);
 
+  // Clear recognizer & live transcript buffers whenever student note is cleared
+  useEffect(() => {
+    if (studentText === '') {
+      setLiveTranscript('');
+      currentTranscriptRef.current = '';
+      if (recognizerRef.current) {
+        recognizerRef.current.clearAccumulatedText();
+      }
+    }
+  }, [studentText]);
+
   // Clean up timer & recognizer on unmount
   useEffect(() => {
     recognizerRef.current = new ChineseSpeechRecognizer();

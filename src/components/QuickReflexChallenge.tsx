@@ -60,15 +60,16 @@ export const QuickReflexChallenge: React.FC<QuickReflexChallengeProps> = ({
 
   useEffect(() => {
     if (subTab !== 'reflex') return;
+    stopSpeaking();
     setUserSpeech('');
     setEvaluation(null);
     setShowHint(false);
     setTimeLeft(25);
     setIsTimerRunning(true);
 
-    setTimeout(() => {
+    const speakTimer = setTimeout(() => {
       speakChinese(currentChallenge.questionChinese, speechRate);
-    }, 400);
+    }, 350);
 
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
@@ -83,7 +84,9 @@ export const QuickReflexChallenge: React.FC<QuickReflexChallengeProps> = ({
     }, 1000);
 
     return () => {
+      clearTimeout(speakTimer);
       if (timerRef.current) clearInterval(timerRef.current);
+      stopSpeaking();
     };
   }, [currentIndex, subTab]);
 
