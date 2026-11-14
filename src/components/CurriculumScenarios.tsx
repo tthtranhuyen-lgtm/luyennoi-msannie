@@ -8,7 +8,6 @@ import {
   Sparkles,
   BookOpen,
   Cloud,
-  LogIn,
   UserCheck,
   AlertCircle,
 } from 'lucide-react';
@@ -35,11 +34,9 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
   const {
     getSubmission,
     saveStudentText,
-    user,
+    cloudConnected,
     studentDisplayName,
     setStudentDisplayName,
-    signInWithGoogle,
-    authError,
     cloudError,
   } = useAudioSubmissions();
 
@@ -197,30 +194,22 @@ export const CurriculumScenarios: React.FC<CurriculumScenariosProps> = ({
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 shrink-0">
-          {user ? (
-            <div className="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
-              <Cloud className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Đã kết nối đám mây: mọi bản ghi âm sẽ tự động gửi về cho Giáo viên</span>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={signInWithGoogle}
-              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all cursor-pointer"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Đăng nhập Google để gửi bài ghi âm cho Giáo viên</span>
-            </button>
-          )}
+          <div className="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+            <Cloud className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>
+              {cloudConnected
+                ? 'Đã kết nối đám mây: ghi âm xong sẽ tự động gửi về cho Giáo viên (không cần đăng nhập)'
+                : 'Đang kết nối đám mây để tự động gửi bài cho Giáo viên...'}
+            </span>
+          </div>
         </div>
       </div>
 
-      {(authError || cloudError) && (
+      {cloudError && (
         <div className="bg-rose-50 border border-rose-300 text-rose-800 rounded-2xl p-4 text-xs flex items-start gap-2.5">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
           <div className="space-y-1 font-medium">
-            {authError && <p>{authError}</p>}
-            {cloudError && <p>{cloudError}</p>}
+            <p>{cloudError}</p>
           </div>
         </div>
       )}

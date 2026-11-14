@@ -10,7 +10,6 @@ import {
   Filter,
   BookOpen,
   Cloud,
-  LogIn,
   AlertCircle,
 } from 'lucide-react';
 import {
@@ -19,7 +18,6 @@ import {
   formatSafeTime,
 } from '../utils/audioStorage';
 import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
-import { TEACHER_ADMIN_EMAIL } from '../firebase';
 import { CURRICULUM_SCENARIOS } from '../data/curriculumData';
 import { speakChinese } from '../utils/speech';
 
@@ -33,11 +31,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
     gradeSubmission,
     deleteSubmission,
     reloadSubmissions,
-    user,
-    isTeacherAdmin,
-    authError,
+    cloudConnected,
     cloudError,
-    signInWithGoogle,
   } = useAudioSubmissions();
   const [selectedScenarioFilter, setSelectedScenarioFilter] = useState<number | 'all'>('all');
 
@@ -215,79 +210,30 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
         </div>
       </div>
 
-      {/* Teacher Cloud Sync Gate Banner */}
-      <div
-        className={`rounded-2xl p-4 sm:p-5 border shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-          isTeacherAdmin
-            ? 'bg-emerald-50/90 border-emerald-200 text-emerald-900'
-            : !user
-            ? 'bg-amber-50/90 border-amber-200 text-amber-950'
-            : 'bg-blue-50/90 border-blue-200 text-blue-950'
-        }`}
-      >
+      {/* Teacher Cloud Sync Status Banner */}
+      <div className="rounded-2xl p-4 sm:p-5 border shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-emerald-50/90 border-emerald-200 text-emerald-900">
         <div className="flex items-start gap-3">
-          <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-              isTeacherAdmin
-                ? 'bg-emerald-600 text-white'
-                : !user
-                ? 'bg-amber-500 text-white'
-                : 'bg-blue-600 text-white'
-            }`}
-          >
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-600 text-white">
             <Cloud className="w-5 h-5" />
           </div>
           <div className="space-y-0.5 text-xs sm:text-sm">
-            {isTeacherAdmin ? (
-              <>
-                <div className="font-bold text-emerald-950">
-                  Đã kết nối Góc Giáo Viên Đám Mây ({user?.email})
-                </div>
-                <p className="text-xs text-emerald-800">
-                  Tự động nhận bài ghi âm từ học sinh ở mọi thiết bị theo thời gian thực.
-                </p>
-              </>
-            ) : !user ? (
-              <>
-                <div className="font-bold text-amber-950">
-                  Cần đăng nhập Google Giáo viên để nhận bài ghi âm từ học sinh
-                </div>
-                <p className="text-xs text-amber-800">
-                  Vui lòng đăng nhập bằng tài khoản giáo viên (<strong>{TEACHER_ADMIN_EMAIL}</strong>)
-                  để đồng bộ và nghe toàn bộ bản ghi âm học sinh đã nộp từ các thiết bị khác.
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="font-bold text-blue-950">
-                  Đang đăng nhập với tài khoản: {user.email}
-                </div>
-                <p className="text-xs text-blue-800">
-                  Để xem toàn bộ bài nộp của tất cả học sinh trên đám mây, vui lòng đăng nhập bằng
-                  tài khoản giáo viên (<strong>{TEACHER_ADMIN_EMAIL}</strong>).
-                </p>
-              </>
-            )}
+            <div className="font-bold text-emerald-950">
+              {cloudConnected
+                ? 'Đã kết nối Góc Giáo Viên Đám Mây (Không cần đăng nhập Google)'
+                : 'Đang kết nối tới máy chủ lưu bài ghi âm...'}
+            </div>
+            <p className="text-xs text-emerald-800">
+              Tự động nhận bài ghi âm từ học sinh ở mọi thiết bị theo thời gian thực ngay khi các em thu âm xong.
+            </p>
           </div>
         </div>
-
-        {!isTeacherAdmin && (
-          <button
-            onClick={signInWithGoogle}
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 shrink-0 self-start sm:self-center"
-          >
-            <LogIn className="w-4 h-4" />
-            <span>{user ? 'Đổi tài khoản Giáo viên' : 'Đăng nhập Google Giáo viên'}</span>
-          </button>
-        )}
       </div>
 
-      {(authError || cloudError) && (
+      {cloudError && (
         <div className="rounded-2xl p-4 bg-rose-50 border border-rose-200 text-rose-900 flex items-start gap-2.5 text-xs">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            {authError && <p className="font-semibold">{authError}</p>}
-            {cloudError && <p className="font-semibold">{cloudError}</p>}
+            <p className="font-semibold">{cloudError}</p>
           </div>
         </div>
       )}

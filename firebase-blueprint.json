@@ -8,9 +8,9 @@
         "studentUid": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 128,
+          "maxLength": 60,
           "pattern": "^[a-zA-Z0-9_\\-]+$",
-          "description": "Firebase Auth UID of the student"
+          "description": "Persistent browser/student device identifier"
         },
         "studentName": {
           "type": "string",
@@ -91,33 +91,6 @@
         "updatedAt"
       ]
     },
-    "AdminUser": {
-      "title": "Teacher Admin Role",
-      "description": "Trusted document granting teacher/admin access to review and grade student submissions.",
-      "type": "object",
-      "properties": {
-        "uid": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 128,
-          "pattern": "^[a-zA-Z0-9_\\-]+$"
-        },
-        "grantedBy": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 128
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "uid",
-        "grantedBy",
-        "createdAt"
-      ]
-    },
     "ConnectionTest": {
       "title": "Firestore Connection Health Check",
       "description": "Read-only connection verification document.",
@@ -134,13 +107,7 @@
       "schema": {
         "$ref": "#/entities/Submission"
       },
-      "description": "Student speaking audio recordings and teacher evaluations"
-    },
-    "/admins/{adminUid}": {
-      "schema": {
-        "$ref": "#/entities/AdminUser"
-      },
-      "description": "Trusted teacher/admin accounts"
+      "description": "Student speaking audio recordings and teacher evaluations (direct classroom sync without login)"
     },
     "/test/{docId}": {
       "schema": {

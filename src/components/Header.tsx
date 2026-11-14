@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plane, Languages, BookOpen, GraduationCap, Zap, Square, Volume2, LogIn, LogOut, Cloud } from 'lucide-react';
+import { Plane, Languages, BookOpen, GraduationCap, Zap, Square, Volume2, Cloud } from 'lucide-react';
 import { stopSpeaking, getNativeVoiceDisplayName } from '../utils/speech';
 import { useAudioSubmissions } from '../context/AudioSubmissionsContext';
 
@@ -24,8 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   speechRate,
   setSpeechRate,
 }) => {
-  const { user, isTeacherAdmin, allSubmissionsList, signInWithGoogle, signOutUser } =
-    useAudioSubmissions();
+  const { cloudConnected, allSubmissionsList } = useAudioSubmissions();
   const pendingCount = allSubmissionsList.filter((s) => s.teacherScore === undefined).length;
 
   return (
@@ -56,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
           Nghe lại bài nói &bull; Giáo viên kiểm tra &amp; chấm điểm trực tiếp
         </p>
 
-        {/* Native Speaker Audio & Cloud Sync Account Bar */}
+        {/* Native Speaker Audio & Cloud Sync Status Bar */}
         <div className="flex flex-wrap items-center justify-center gap-2.5 mt-3.5">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-400/30 text-[11px] text-blue-200 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -64,31 +63,14 @@ export const Header: React.FC<HeaderProps> = ({
             <span>Đồng bộ âm thanh: {getNativeVoiceDisplayName()}</span>
           </div>
 
-          {user ? (
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-[11px] text-emerald-200 shadow-xs">
-              <Cloud className="w-3.5 h-3.5 text-emerald-300" />
-              <span className="font-semibold">
-                {isTeacherAdmin ? 'Giáo viên: ' : 'Học sinh: '}
-                <strong className="text-white">{user.displayName || user.email}</strong>
-              </span>
-              <button
-                onClick={signOutUser}
-                className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold transition-colors"
-                title="Đăng xuất tài khoản Google"
-              >
-                <LogOut className="w-3 h-3" />
-                <span>Thoát</span>
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={signInWithGoogle}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 border border-blue-300/40 text-[11px] font-bold text-white shadow-md transition-all cursor-pointer"
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>Đăng nhập Google để gửi / nhận bài ghi âm</span>
-            </button>
-          )}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-[11px] text-emerald-200 shadow-xs">
+            <Cloud className="w-3.5 h-3.5 text-emerald-300" />
+            <span className="font-semibold">
+              {cloudConnected
+                ? 'Đám mây sẵn sàng • Tự động gửi & nhận bài ghi âm'
+                : 'Đang kết nối máy chủ lưu bài ghi âm...'}
+            </span>
+          </div>
         </div>
       </div>
 

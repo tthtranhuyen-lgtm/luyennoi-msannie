@@ -1,13 +1,5 @@
 import { initializeApp } from 'firebase/app';
 import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-  User,
-} from 'firebase/auth';
-import {
   getFirestore,
   doc,
   getDocFromServer,
@@ -16,10 +8,6 @@ import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
-
-export const TEACHER_ADMIN_EMAIL = 'tth.tranhuyen@gmail.com';
 
 export enum OperationType {
   CREATE = 'create',
@@ -55,16 +43,12 @@ export function handleFirestoreError(
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo:
-        auth.currentUser?.providerData?.map((provider) => ({
-          providerId: provider.providerId,
-          email: provider.email,
-        })) || [],
+      userId: null,
+      email: null,
+      emailVerified: null,
+      isAnonymous: false,
+      tenantId: null,
+      providerInfo: [],
     },
     operationType,
     path,
@@ -84,6 +68,3 @@ export async function testFirestoreConnection(): Promise<void> {
 }
 
 void testFirestoreConnection();
-
-export { signInWithPopup, signOut, onAuthStateChanged };
-export type { User };

@@ -19,29 +19,6 @@ service cloud.firestore {
       return resource.data;
     }
 
-    function isSignedIn() {
-      return request.auth != null && request.auth.token.email_verified == true;
-    }
-
-    function isBootstrappedTeacher() {
-      return isSignedIn()
-        && request.auth.token.email == 'tth.tranhuyen@gmail.com'
-        && request.auth.token.email_verified == true;
-    }
-
-    function isAdmin() {
-      return isBootstrappedTeacher()
-        || (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
-    }
-
-    function isValidAdmin(data) {
-      return data.keys().hasAll(['uid', 'grantedBy', 'createdAt'])
-        && data.keys().hasOnly(['uid', 'grantedBy', 'createdAt'])
-        && isValidId(data.uid)
-        && data.grantedBy is string && data.grantedBy.size() >= 1 && data.grantedBy.size() <= 128
-        && data.createdAt is timestamp;
-    }
-
     function isValidSubmission(data) {
       return data.keys().hasAll([
           'studentUid',
@@ -70,7 +47,7 @@ service cloud.firestore {
           'teacherFeedback',
           'reviewedAt'
         ])
-        && data.studentUid is string && data.studentUid.size() >= 1 && data.studentUid.size() <= 128 && data.studentUid.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.studentUid is string && data.studentUid.size() >= 1 && data.studentUid.size() <= 60 && data.studentUid.matches('^[a-zA-Z0-9_\\-]+$')
         && data.studentName is string && data.studentName.size() >= 1 && data.studentName.size() <= 100
         && data.questionId is string && data.questionId.size() >= 1 && data.questionId.size() <= 64 && data.questionId.matches('^[a-zA-Z0-9_\\-]+$')
         && data.scenarioId is int && data.scenarioId >= 1 && data.scenarioId <= 20
@@ -92,59 +69,46 @@ service cloud.firestore {
       allow list, write: if false;
     }
 
-    // Trusted teacher/admin registry
-    match /admins/{adminUid} {
-      allow get: if isSignedIn() && isValidId(adminUid) && (request.auth.uid == adminUid || isAdmin());
-      allow list: if isBootstrappedTeacher();
-      allow create: if isAdmin() && isValidId(adminUid) && isValidAdmin(incoming()) && incoming().uid == adminUid && incoming().createdAt == request.time;
-      allow update: if isAdmin() && isValidId(adminUid) && isValidAdmin(incoming()) && incoming().uid == existing().uid && incoming().createdAt == existing().createdAt;
-      allow delete: if isAdmin() && isValidId(adminUid);
-    }
-
-    // Cross-device student speaking submissions and teacher grading
+    // Cross-device student speaking submissions and teacher grading (no login required)
     match /submissions/{submissionId} {
-      allow get: if isSignedIn() && isValidId(submissionId) && (existing().studentUid == request.auth.uid || isAdmin());
-      allow list: if isSignedIn() && (isBootstrappedTeacher() || existing().studentUid == request.auth.uid);
+      allow get: if isValidId(submissionId);
+      allow list: if resource.data.scenarioId >= 1 && resource.data.scenarioId <= 20;
 
-      allow create: if isSignedIn()
-        && isValidId(submissionId)
+      allow create: if isValidId(submissionId)
         && isValidSubmission(incoming())
-        && incoming().studentUid == request.auth.uid
+        && submissionId == (incoming().studentUid + '_' + incoming().questionId)
         && incoming().createdAt == request.time
         && incoming().updatedAt == request.time
         && !('teacherScore' in incoming())
         && !('teacherFeedback' in incoming())
         && !('reviewedAt' in incoming());
 
-      allow update: if isSignedIn()
-        && isValidId(submissionId)
+      allow update: if isValidId(submissionId)
         && isValidSubmission(incoming())
         && incoming().studentUid == existing().studentUid
         && incoming().questionId == existing().questionId
         && incoming().createdAt == existing().createdAt
         && incoming().updatedAt == request.time
         && (
-          (existing().studentUid == request.auth.uid
-            && incoming().diff(existing()).affectedKeys().hasOnly([
-              'studentName',
-              'scenarioTitle',
-              'questionText',
-              'studentText',
-              'audioDataUrl',
-              'timestamp',
-              'updatedAt'
-            ]))
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'studentName',
+            'scenarioTitle',
+            'questionText',
+            'studentText',
+            'audioDataUrl',
+            'timestamp',
+            'updatedAt'
+          ])
           ||
-          (isAdmin()
-            && incoming().diff(existing()).affectedKeys().hasOnly([
-              'teacherScore',
-              'teacherFeedback',
-              'reviewedAt',
-              'updatedAt'
-            ]))
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'teacherScore',
+            'teacherFeedback',
+            'reviewedAt',
+            'updatedAt'
+          ])
         );
 
-      allow delete: if isSignedIn() && isValidId(submissionId) && (existing().studentUid == request.auth.uid || isAdmin());
+      allow delete: if isValidId(submissionId);
     }
   }
 }

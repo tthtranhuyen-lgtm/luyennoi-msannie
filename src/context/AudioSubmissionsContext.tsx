@@ -19,16 +19,9 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import {
-  auth,
   db,
-  googleProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-  TEACHER_ADMIN_EMAIL,
   OperationType,
   handleFirestoreError,
-  User,
 } from '../firebase';
 import {
   StudentSubmission,
@@ -44,16 +37,12 @@ interface AudioSubmissionsContextType {
   submissions: Record<string, StudentSubmission>;
   cloudSubmissions: StudentSubmission[];
   allSubmissionsList: StudentSubmission[];
-  user: User | null;
-  authLoading: boolean;
-  isTeacherAdmin: boolean;
+  localStudentId: string;
   studentDisplayName: string;
   setStudentDisplayName: (name: string) => void;
-  authError: string | null;
+  cloudConnected: boolean;
   cloudError: string | null;
   syncingQuestionId: string | null;
-  signInWithGoogle: () => Promise<void>;
-  signOutUser: () => Promise<void>;
   syncSubmissionNow: (questionId: string) => Promise<boolean>;
   saveAudioRecording: (
     questionId: string,
@@ -103,6 +92,25 @@ function sanitizeId(raw: string, maxLen: number): string {
   return cleaned || 'item';
 }
 
+function getOrCreateLocalStudentId(): string {
+  const key = 'hanyu-student-device-id';
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const existing = localStorage.getItem(key);
+      if (existing && /^[a-zA-Z0-9_-]{4,60}$/.test(existing)) {
+        return existing;
+      }
+      const generated = `stu_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+      const safe = sanitizeId(generated, 60);
+      localStorage.setItem(key, safe);
+      return safe;
+    }
+  } catch {
+    // ignore
+  }
+  return `stu_${Date.now().toString(36)}`;
+}
+
 function loadSavedStudentName(): string {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -117,19 +125,13 @@ function loadSavedStudentName(): string {
 export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [submissions, setSubmissions] = useState<Record<string, StudentSubmission>>({});
   const [cloudSubmissions, setCloudSubmissions] = useState<StudentSubmission[]>([]);
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState<boolean>(true);
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [cloudConnected, setCloudConnected] = useState<boolean>(false);
   const [cloudError, setCloudError] = useState<string | null>(null);
   const [syncingQuestionId, setSyncingQuestionId] = useState<string | null>(null);
   const [studentDisplayName, setStudentDisplayNameState] = useState<string>(loadSavedStudentName);
 
-  const userRef = useRef<User | null>(null);
+  const localStudentIdRef = useRef<string>(getOrCreateLocalStudentId());
   const studentNameRef = useRef<string>(studentDisplayName);
-
-  const isTeacherAdmin = Boolean(
-    user && user.emailVerified && user.email === TEACHER_ADMIN_EMAIL
-  );
 
   const setStudentDisplayName = (name: string) => {
     const trimmed = name.slice(0, 100);
@@ -144,13 +146,8 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     }
   };
 
-  const resolveEffectiveStudentName = (activeUser?: User | null, override?: string): string => {
-    const candidate =
-      override ||
-      studentNameRef.current ||
-      activeUser?.displayName ||
-      activeUser?.email?.split('@')[0] ||
-      'Học viên';
+  const resolveEffectiveStudentName = (override?: string): string => {
+    const candidate = override || studentNameRef.current || 'Học viên';
     return candidate.trim().slice(0, 100) || 'Học viên';
   };
 
@@ -163,14 +160,9 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     }
   };
 
-  // Push a single local submission to Firestore
-  const pushSubmissionToFirestore = async (
-    sub: StudentSubmission,
-    activeUser: User
-  ): Promise<boolean> => {
-    if (!activeUser || !activeUser.emailVerified) return false;
-
-    const uid = sanitizeId(activeUser.uid, 128);
+  // Push a single local submission directly to Firestore (no login required)
+  const pushSubmissionToFirestore = async (sub: StudentSubmission): Promise<boolean> => {
+    const uid = sanitizeId(sub.studentUid || localStudentIdRef.current, 60);
     const qId = sanitizeId(sub.questionId, 64);
     const docId = `${uid}_${qId}`.slice(0, 128);
     const docPath = `submissions/${docId}`;
@@ -201,9 +193,10 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       }
 
       const safeScenarioId = Math.min(20, Math.max(1, Math.floor(Number(sub.scenarioId) || 1)));
-      const safeName = resolveEffectiveStudentName(activeUser, sub.studentName);
+      const safeName = resolveEffectiveStudentName(sub.studentName);
       const safeScenarioTitle = (sub.scenarioTitle || '').trim().slice(0, 200);
-      const safeQuestionText = (sub.questionText || 'Câu hỏi luyện nói').trim().slice(0, 500) || 'Câu hỏi luyện nói';
+      const safeQuestionText =
+        (sub.questionText || 'Câu hỏi luyện nói').trim().slice(0, 500) || 'Câu hỏi luyện nói';
       const safeStudentText = (sub.studentText || '').slice(0, 2000);
       const safeTimestamp = Math.max(1, Math.floor(sub.timestamp || Date.now()));
 
@@ -275,12 +268,18 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     }
   };
 
-  // Initial local hydration + auth listener
+  // Initial local hydration + real-time Firestore listener (no login required)
   useEffect(() => {
     reloadSubmissions();
 
     hydrateSubmissionsFromIndexedDB().then((list) => {
       setSubmissions(mapSubmissionsList(list));
+      // Push any previously un-synced local recordings automatically
+      list.forEach((localSub) => {
+        if (localSub.audioDataUrl && !localSub.syncedToCloud) {
+          void pushSubmissionToFirestore(localSub);
+        }
+      });
     });
 
     const handleUpdate = () => {
@@ -288,39 +287,17 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     };
     window.addEventListener('hanyu-submissions-updated', handleUpdate);
 
-    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
-      userRef.current = firebaseUser;
-      setUser(firebaseUser);
-      setAuthLoading(false);
-
-      if (firebaseUser?.displayName && !studentNameRef.current) {
-        setStudentDisplayName(firebaseUser.displayName);
-      }
-    });
-
-    return () => {
-      window.removeEventListener('hanyu-submissions-updated', handleUpdate);
-      unsubscribeAuth();
-    };
-  }, []);
-
-  // Firestore real-time listener (only when authenticated with verified email)
-  useEffect(() => {
-    if (authLoading || !user || !user.emailVerified) {
-      setCloudSubmissions([]);
-      return;
-    }
-
     const colRef = collection(db, 'submissions');
-    const q =
-      user.email === TEACHER_ADMIN_EMAIL
-        ? colRef
-        : query(colRef, where('studentUid', '==', user.uid));
+    const q = query(colRef, where('scenarioId', '>=', 1), where('scenarioId', '<=', 20));
 
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
+        setCloudConnected(true);
+        setCloudError(null);
         const docs: StudentSubmission[] = [];
+        const myStudentId = localStudentIdRef.current;
+
         snapshot.forEach((docSnap) => {
           const data = docSnap.data() as any;
           const item: StudentSubmission = {
@@ -341,8 +318,8 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
           };
           docs.push(item);
 
-          // If this doc belongs to the current user, sync teacher grades & audio back to local state/IndexedDB
-          if (data.studentUid === user.uid && item.questionId) {
+          // Sync teacher grading/feedback back to this student's device state
+          if (data.studentUid === myStudentId && item.questionId) {
             const localExisting = getSubFromStorage(item.questionId);
             const merged = saveSubToStorage(item.questionId, {
               ...localExisting,
@@ -367,53 +344,16 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       }
     );
 
-    // Automatically push any local unsynced recordings once signed in
-    const localList = getAllSubmissions();
-    localList.forEach((localSub) => {
-      if (localSub.audioDataUrl && !localSub.syncedToCloud) {
-        void pushSubmissionToFirestore(localSub, user);
-      }
-    });
-
     return () => {
+      window.removeEventListener('hanyu-submissions-updated', handleUpdate);
       unsubscribe();
     };
-  }, [user, authLoading]);
-
-  const signInWithGoogle = async () => {
-    setAuthError(null);
-    try {
-      const cred = await signInWithPopup(auth, googleProvider);
-      if (cred.user?.displayName && !studentNameRef.current) {
-        setStudentDisplayName(cred.user.displayName);
-      }
-    } catch (err: any) {
-      const code = err?.code || '';
-      if (code === 'auth/popup-closed-by-user') {
-        return;
-      }
-      if (code === 'auth/unauthorized-domain') {
-        const host = typeof window !== 'undefined' ? window.location.hostname : '';
-        setAuthError(
-          `Tên miền "${host}" chưa được cấp quyền đăng nhập trong Firebase Console (Authentication → Settings → Authorized domains).`
-        );
-        return;
-      }
-      setAuthError('Không thể đăng nhập Google: ' + (err?.message || code || 'Lỗi không xác định'));
-    }
-  };
-
-  const signOutUser = async () => {
-    setAuthError(null);
-    await signOut(auth);
-  };
+  }, []);
 
   const syncSubmissionNow = async (questionId: string): Promise<boolean> => {
-    const activeUser = userRef.current;
-    if (!activeUser || !activeUser.emailVerified) return false;
     const sub = submissions[questionId] || getSubFromStorage(questionId);
     if (!sub) return false;
-    return pushSubmissionToFirestore(sub, activeUser);
+    return pushSubmissionToFirestore(sub);
   };
 
   const saveAudioRecording = (
@@ -428,10 +368,11 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     }
   ): StudentSubmission => {
     const existing = getSubFromStorage(questionId);
-    const activeUser = userRef.current;
-    const effectiveName = resolveEffectiveStudentName(activeUser, meta.studentName || existing?.studentName);
+    const effectiveName = resolveEffectiveStudentName(meta.studentName || existing?.studentName);
+    const uid = existing?.studentUid || localStudentIdRef.current;
 
     const updated = saveSubToStorage(questionId, {
+      id: `${sanitizeId(uid, 60)}_${sanitizeId(questionId, 64)}`.slice(0, 128),
       scenarioId: meta.scenarioId,
       scenarioTitle: meta.scenarioTitle,
       questionId,
@@ -440,15 +381,12 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       audioDataUrl,
       timestamp: Date.now(),
       studentName: effectiveName,
-      studentUid: activeUser?.uid,
+      studentUid: uid,
       syncedToCloud: false,
     });
 
     setSubmissions((prev) => ({ ...prev, [questionId]: updated }));
-
-    if (activeUser && activeUser.emailVerified) {
-      void pushSubmissionToFirestore(updated, activeUser);
-    }
+    void pushSubmissionToFirestore(updated);
 
     return updated;
   };
@@ -463,10 +401,11 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     }
   ): StudentSubmission => {
     const existing = getSubFromStorage(questionId);
-    const activeUser = userRef.current;
-    const effectiveName = resolveEffectiveStudentName(activeUser, existing?.studentName);
+    const effectiveName = resolveEffectiveStudentName(existing?.studentName);
+    const uid = existing?.studentUid || localStudentIdRef.current;
 
     const updated = saveSubToStorage(questionId, {
+      id: existing?.id || `${sanitizeId(uid, 60)}_${sanitizeId(questionId, 64)}`.slice(0, 128),
       scenarioId: meta?.scenarioId || existing?.scenarioId || 1,
       scenarioTitle: meta?.scenarioTitle || existing?.scenarioTitle,
       questionId,
@@ -475,7 +414,7 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
       audioDataUrl: existing?.audioDataUrl,
       timestamp: Date.now(),
       studentName: effectiveName,
-      studentUid: existing?.studentUid || activeUser?.uid,
+      studentUid: uid,
       syncedToCloud: existing?.syncedToCloud,
     });
 
@@ -489,15 +428,15 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     feedback: string,
     firestoreDocId?: string
   ): Promise<StudentSubmission | null> => {
-    const activeUser = userRef.current;
     const safeScore = Math.min(10, Math.max(0, Number(score) || 0));
     const safeFeedback = (feedback || '').slice(0, 2000);
     const reviewedAt = Date.now();
+    const targetDocId = firestoreDocId || submissions[questionId]?.id;
 
-    if (firestoreDocId && activeUser && activeUser.emailVerified) {
-      const docPath = `submissions/${firestoreDocId}`;
+    if (targetDocId) {
+      const docPath = `submissions/${targetDocId}`;
       try {
-        await updateDoc(doc(db, 'submissions', firestoreDocId), {
+        await updateDoc(doc(db, 'submissions', targetDocId), {
           teacherScore: safeScore,
           teacherFeedback: safeFeedback,
           reviewedAt,
@@ -516,13 +455,12 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
   };
 
   const deleteSubmission = async (questionId: string, firestoreDocId?: string): Promise<void> => {
-    const activeUser = userRef.current;
     const targetDocId =
       firestoreDocId ||
       submissions[questionId]?.id ||
-      (activeUser ? `${sanitizeId(activeUser.uid, 128)}_${sanitizeId(questionId, 64)}` : undefined);
+      `${sanitizeId(localStudentIdRef.current, 60)}_${sanitizeId(questionId, 64)}`.slice(0, 128);
 
-    if (targetDocId && activeUser && activeUser.emailVerified) {
+    if (targetDocId) {
       const docPath = `submissions/${targetDocId}`;
       try {
         await deleteDoc(doc(db, 'submissions', targetDocId));
@@ -546,14 +484,16 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
     return submissions[questionId] || getSubFromStorage(questionId);
   };
 
-  // Merge cloud submissions (for teacher or signed-in student) + any local-only submissions
+  // Merge cloud submissions + any local-only submissions (e.g. demo seeds)
   const mergedSubmissionsMap: Record<string, StudentSubmission> = {};
   cloudSubmissions.forEach((c) => {
     const key = c.id || c.questionId;
     mergedSubmissionsMap[key] = c;
   });
   Object.values(submissions).forEach((loc) => {
-    const docKey = loc.id || (user ? `${sanitizeId(user.uid, 128)}_${sanitizeId(loc.questionId, 64)}` : loc.questionId);
+    const docKey =
+      loc.id ||
+      `${sanitizeId(localStudentIdRef.current, 60)}_${sanitizeId(loc.questionId, 64)}`.slice(0, 128);
     if (!mergedSubmissionsMap[docKey] && !mergedSubmissionsMap[loc.questionId]) {
       mergedSubmissionsMap[loc.questionId] = loc;
     }
@@ -568,16 +508,12 @@ export const AudioSubmissionsProvider: React.FC<{ children: ReactNode }> = ({ ch
         submissions,
         cloudSubmissions,
         allSubmissionsList,
-        user,
-        authLoading,
-        isTeacherAdmin,
+        localStudentId: localStudentIdRef.current,
         studentDisplayName,
         setStudentDisplayName,
-        authError,
+        cloudConnected,
         cloudError,
         syncingQuestionId,
-        signInWithGoogle,
-        signOutUser,
         syncSubmissionNow,
         saveAudioRecording,
         saveStudentText,
@@ -596,16 +532,12 @@ const fallbackContextValue: AudioSubmissionsContextType = {
   submissions: {},
   cloudSubmissions: [],
   allSubmissionsList: [],
-  user: null,
-  authLoading: false,
-  isTeacherAdmin: false,
+  localStudentId: 'stu_local',
   studentDisplayName: '',
   setStudentDisplayName: () => {},
-  authError: null,
+  cloudConnected: false,
   cloudError: null,
   syncingQuestionId: null,
-  signInWithGoogle: async () => {},
-  signOutUser: async () => {},
   syncSubmissionNow: async () => false,
   saveAudioRecording: (id, url, meta) => ({
     scenarioId: meta.scenarioId,
