@@ -5,7 +5,6 @@ import {
   CheckCircle,
   Clock,
   RotateCcw,
-  Sparkles,
   Download,
   Filter,
   BookOpen,
@@ -170,21 +169,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ speechRate }
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
               👨‍🏫 Góc Giáo Viên: Kiểm Tra Bài Nói Của Học Sinh
             </h2>
-            <p className="text-sm text-blue-100/90 max-w-2xl font-normal leading-relaxed">
-              Nghe trực tiếp bản ghi âm giọng nói của học sinh từ các bài tập tình huống sân bay. Cho
-              điểm thang 10, nhận xét phát âm, thanh điệu và gửi phản hồi chuẩn xác cho từng em.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap sm:flex-col items-center sm:items-end gap-2 shrink-0">
-            <button
-              onClick={handleSeedDemoSubmissions}
-              className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
-            >
-              <Sparkles className="w-4 h-4 text-slate-950" />
-              <span>Nạp 3 bài mẫu để thử nghiệm</span>
-            </button>
-            <span className="text-[11px] text-blue-200">Dữ liệu đồng bộ tự động theo thời gian thực</span>
           </div>
         </div>
 
